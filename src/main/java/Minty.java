@@ -4,6 +4,7 @@ import java.util.Scanner;
  * Runs Minty, a simple command-line chatbot.
  */
 public class Minty {
+    private static final int MAX_TASKS = 100;
     private static final String DIVIDER = "____________________________________________________________";
     private static final String INDENT = "  ";
     private static final String BANNER =
@@ -15,12 +16,15 @@ public class Minty {
             + "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝\n";
 
     /**
-     * Greets the user, echoes commands, and exits when the user enters {@code bye}.
+     * Greets the user, stores tasks, lists stored tasks on request, and exits when
+     * the user enters {@code bye}.
      *
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        String[] tasks = new String[MAX_TASKS];
+        int taskCount = 0;
 
         System.out.println(DIVIDER);
         System.out.print(BANNER);
@@ -31,7 +35,17 @@ public class Minty {
         String command = scanner.nextLine();
         while (!command.equals("bye")) {
             System.out.println(DIVIDER);
-            System.out.println(INDENT + command);
+
+            if (command.equals("list")) {
+                for (int i = 0; i < taskCount; i++) {
+                    System.out.println(INDENT + (i + 1) + ". " + tasks[i]);
+                }
+            } else {
+                tasks[taskCount] = command;
+                taskCount++;
+                System.out.println(INDENT + "added: " + command);
+            }
+
             System.out.println(DIVIDER);
             command = scanner.nextLine();
         }
