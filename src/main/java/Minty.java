@@ -16,14 +16,15 @@ public class Minty {
             + "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝\n";
 
     /**
-     * Greets the user, stores tasks, lists stored tasks on request, and exits when
-     * the user enters {@code bye}.
+     * Greets the user, stores tasks, lists stored tasks, marks tasks as done, and
+     * exits when the user enters {@code bye}.
      *
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String[] tasks = new String[MAX_TASKS];
+        boolean[] isDone = new boolean[MAX_TASKS];
         int taskCount = 0;
 
         System.out.println(DIVIDER);
@@ -37,9 +38,16 @@ public class Minty {
             System.out.println(DIVIDER);
 
             if (command.equals("list")) {
+                System.out.println(INDENT + "Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println(INDENT + (i + 1) + ". " + tasks[i]);
+                    String status = isDone[i] ? "X" : " ";
+                    System.out.println(INDENT + (i + 1) + ".[" + status + "] " + tasks[i]);
                 }
+            } else if (command.startsWith("mark ")) {
+                int taskIndex = Integer.parseInt(command.substring(5)) - 1;
+                isDone[taskIndex] = true;
+                System.out.println(INDENT + "Nice! I've marked this task as done:");
+                System.out.println(INDENT + INDENT + "[X] " + tasks[taskIndex]);
             } else {
                 tasks[taskCount] = command;
                 taskCount++;
