@@ -16,8 +16,8 @@ public class Minty {
             + "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝\n";
 
     /**
-     * Greets the user, stores tasks, lists stored tasks, marks tasks as done, and
-     * exits when the user enters {@code bye}.
+     * Greets the user, stores tasks, lists stored tasks, updates task completion
+     * statuses, and exits when the user enters {@code bye}.
      *
      * @param args command-line arguments, which are not used
      */
@@ -48,6 +48,11 @@ public class Minty {
                 isDone[taskIndex] = true;
                 System.out.println(INDENT + "Nice! I've marked this task as done:");
                 System.out.println(INDENT + INDENT + "[X] " + tasks[taskIndex]);
+            } else if (command.startsWith("unmark ")) {
+                int taskIndex = Integer.parseInt(command.substring(7)) - 1;
+                isDone[taskIndex] = false;
+                System.out.println(INDENT + "OK, I've marked this task as not done yet:");
+                System.out.println(INDENT + INDENT + "[ ] " + tasks[taskIndex]);
             } else {
                 tasks[taskCount] = command;
                 taskCount++;
