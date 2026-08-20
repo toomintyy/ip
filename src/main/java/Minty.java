@@ -23,8 +23,7 @@ public class Minty {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String[] tasks = new String[MAX_TASKS];
-        boolean[] isDone = new boolean[MAX_TASKS];
+        Task[] tasks = new Task[MAX_TASKS];
         int taskCount = 0;
 
         System.out.println(DIVIDER);
@@ -40,21 +39,20 @@ public class Minty {
             if (command.equals("list")) {
                 System.out.println(INDENT + "Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
-                    String status = isDone[i] ? "X" : " ";
-                    System.out.println(INDENT + (i + 1) + ".[" + status + "] " + tasks[i]);
+                    System.out.println(INDENT + (i + 1) + "." + tasks[i]);
                 }
             } else if (command.startsWith("mark ")) {
                 int taskIndex = Integer.parseInt(command.substring(5)) - 1;
-                isDone[taskIndex] = true;
+                tasks[taskIndex].markAsDone();
                 System.out.println(INDENT + "Nice! I've marked this task as done:");
-                System.out.println(INDENT + INDENT + "[X] " + tasks[taskIndex]);
+                System.out.println(INDENT + INDENT + tasks[taskIndex]);
             } else if (command.startsWith("unmark ")) {
                 int taskIndex = Integer.parseInt(command.substring(7)) - 1;
-                isDone[taskIndex] = false;
+                tasks[taskIndex].markAsNotDone();
                 System.out.println(INDENT + "OK, I've marked this task as not done yet:");
-                System.out.println(INDENT + INDENT + "[ ] " + tasks[taskIndex]);
+                System.out.println(INDENT + INDENT + tasks[taskIndex]);
             } else {
-                tasks[taskCount] = command;
+                tasks[taskCount] = new Task(command);
                 taskCount++;
                 System.out.println(INDENT + "added: " + command);
             }
