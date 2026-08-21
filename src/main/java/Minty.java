@@ -36,50 +36,53 @@ public class Minty {
         while (!command.equals("bye")) {
             System.out.println(DIVIDER);
 
-            if (command.equals("list")) {
-                System.out.println(INDENT + "Here are the tasks in your list:");
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.println(INDENT + (i + 1) + "." + tasks[i]);
-                }
-            } else if (command.startsWith("mark ")) {
-                int taskIndex = Integer.parseInt(command.substring(5)) - 1;
-                tasks[taskIndex].markAsDone();
-                System.out.println(INDENT + "Nice! I've marked this task as done:");
-                System.out.println(INDENT + INDENT + tasks[taskIndex]);
-            } else if (command.startsWith("unmark ")) {
-                int taskIndex = Integer.parseInt(command.substring(7)) - 1;
-                tasks[taskIndex].markAsNotDone();
-                System.out.println(INDENT + "OK, I've marked this task as not done yet:");
-                System.out.println(INDENT + INDENT + tasks[taskIndex]);
-            } else if (command.equals("todo") || command.startsWith("todo ")) {
-                String description = command.substring(4).trim();
-                if (description.isEmpty()) {
-                    System.out.println(INDENT + "Hmm, a todo needs a description.");
-                } else {
+            try {
+                if (command.equals("list")) {
+                    System.out.println(INDENT + "Here are the tasks in your list:");
+                    for (int i = 0; i < taskCount; i++) {
+                        System.out.println(INDENT + (i + 1) + "." + tasks[i]);
+                    }
+                } else if (command.startsWith("mark ")) {
+                    int taskIndex = Integer.parseInt(command.substring(5)) - 1;
+                    tasks[taskIndex].markAsDone();
+                    System.out.println(INDENT + "Nice! I've marked this task as done:");
+                    System.out.println(INDENT + INDENT + tasks[taskIndex]);
+                } else if (command.startsWith("unmark ")) {
+                    int taskIndex = Integer.parseInt(command.substring(7)) - 1;
+                    tasks[taskIndex].markAsNotDone();
+                    System.out.println(INDENT + "OK, I've marked this task as not done yet:");
+                    System.out.println(INDENT + INDENT + tasks[taskIndex]);
+                } else if (command.equals("todo") || command.startsWith("todo ")) {
+                    String description = command.substring(4).trim();
+                    if (description.isEmpty()) {
+                        throw new MintyException("Hmm, a todo needs a description.");
+                    }
                     tasks[taskCount] = new Todo(description);
                     taskCount++;
                     printTaskAdded(tasks[taskCount - 1], taskCount);
+                } else if (command.startsWith("deadline ")) {
+                    String details = command.substring(9);
+                    int bySeparator = details.indexOf(" /by ");
+                    String description = details.substring(0, bySeparator);
+                    String by = details.substring(bySeparator + 5);
+                    tasks[taskCount] = new Deadline(description, by);
+                    taskCount++;
+                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                } else if (command.startsWith("event ")) {
+                    String details = command.substring(6);
+                    int fromSeparator = details.indexOf(" /from ");
+                    int toSeparator = details.indexOf(" /to ", fromSeparator + 7);
+                    String description = details.substring(0, fromSeparator);
+                    String from = details.substring(fromSeparator + 7, toSeparator);
+                    String to = details.substring(toSeparator + 5);
+                    tasks[taskCount] = new Event(description, from, to);
+                    taskCount++;
+                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                } else {
+                    throw new MintyException("Sorry, I don't understand that command.");
                 }
-            } else if (command.startsWith("deadline ")) {
-                String details = command.substring(9);
-                int bySeparator = details.indexOf(" /by ");
-                String description = details.substring(0, bySeparator);
-                String by = details.substring(bySeparator + 5);
-                tasks[taskCount] = new Deadline(description, by);
-                taskCount++;
-                printTaskAdded(tasks[taskCount - 1], taskCount);
-            } else if (command.startsWith("event ")) {
-                String details = command.substring(6);
-                int fromSeparator = details.indexOf(" /from ");
-                int toSeparator = details.indexOf(" /to ", fromSeparator + 7);
-                String description = details.substring(0, fromSeparator);
-                String from = details.substring(fromSeparator + 7, toSeparator);
-                String to = details.substring(toSeparator + 5);
-                tasks[taskCount] = new Event(description, from, to);
-                taskCount++;
-                printTaskAdded(tasks[taskCount - 1], taskCount);
-            } else {
-                System.out.println(INDENT + "Sorry, I don't understand that command.");
+            } catch (MintyException exception) {
+                System.out.println(INDENT + exception.getMessage());
             }
 
             System.out.println(DIVIDER);
