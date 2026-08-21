@@ -189,7 +189,7 @@ public class Minty {
     private static void printTaskAdded(Task task, int taskCount) {
         System.out.println(INDENT + "Got it. I've added this task:");
         System.out.println(INDENT + INDENT + task);
-        System.out.println(INDENT + "Now you have " + taskCount + " tasks in the list.");
+        printTaskCount(taskCount);
     }
 
     /**
@@ -201,6 +201,16 @@ public class Minty {
     private static void printTaskDeleted(Task task, int taskCount) {
         System.out.println(INDENT + "Noted. I've removed this task:");
         System.out.println(INDENT + INDENT + task);
-        System.out.println(INDENT + "Now you have " + taskCount + " tasks in the list.");
+        printTaskCount(taskCount);
+    }
+
+    /**
+     * Prints the current task count using the correct singular or plural noun.
+     *
+     * @param taskCount current number of stored tasks
+     */
+    private static void printTaskCount(int taskCount) {
+        String taskNoun = taskCount == 1 ? "task" : "tasks";
+        System.out.println(INDENT + "Now you have " + taskCount + " " + taskNoun + " in the list.");
     }
 }
