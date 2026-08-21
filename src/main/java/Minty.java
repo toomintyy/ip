@@ -51,10 +51,28 @@ public class Minty {
                 tasks[taskIndex].markAsNotDone();
                 System.out.println(INDENT + "OK, I've marked this task as not done yet:");
                 System.out.println(INDENT + INDENT + tasks[taskIndex]);
-            } else {
-                tasks[taskCount] = new Task(command);
+            } else if (command.startsWith("todo ")) {
+                tasks[taskCount] = new Todo(command.substring(5));
                 taskCount++;
-                System.out.println(INDENT + "added: " + command);
+                printTaskAdded(tasks[taskCount - 1], taskCount);
+            } else if (command.startsWith("deadline ")) {
+                String details = command.substring(9);
+                int bySeparator = details.indexOf(" /by ");
+                String description = details.substring(0, bySeparator);
+                String by = details.substring(bySeparator + 5);
+                tasks[taskCount] = new Deadline(description, by);
+                taskCount++;
+                printTaskAdded(tasks[taskCount - 1], taskCount);
+            } else if (command.startsWith("event ")) {
+                String details = command.substring(6);
+                int fromSeparator = details.indexOf(" /from ");
+                int toSeparator = details.indexOf(" /to ", fromSeparator + 7);
+                String description = details.substring(0, fromSeparator);
+                String from = details.substring(fromSeparator + 7, toSeparator);
+                String to = details.substring(toSeparator + 5);
+                tasks[taskCount] = new Event(description, from, to);
+                taskCount++;
+                printTaskAdded(tasks[taskCount - 1], taskCount);
             }
 
             System.out.println(DIVIDER);
@@ -64,5 +82,17 @@ public class Minty {
         System.out.println(DIVIDER);
         System.out.println(INDENT + "Bye. Hope to see you again soon!");
         System.out.println(DIVIDER);
+    }
+
+    /**
+     * Prints the confirmation shown after a task is added.
+     *
+     * @param task task that was added
+     * @param taskCount current number of stored tasks
+     */
+    private static void printTaskAdded(Task task, int taskCount) {
+        System.out.println(INDENT + "Got it. I've added this task:");
+        System.out.println(INDENT + INDENT + task);
+        System.out.println(INDENT + "Now you have " + taskCount + " tasks in the list.");
     }
 }
