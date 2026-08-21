@@ -87,7 +87,7 @@ public class Minty {
         }
 
         System.out.println(DIVIDER);
-        System.out.println(INDENT + "Bye. Hope to see you again soon!");g
+        System.out.println(INDENT + "Bye. Hope to see you again soon!");
         System.out.println(DIVIDER);
     }
 
