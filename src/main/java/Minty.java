@@ -33,48 +33,59 @@ public class Minty {
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
-            if (command.equals("bye")) {
+            CommandType commandType = CommandType.from(command);
+            if (commandType == CommandType.BYE) {
                 break;
             }
             System.out.println(DIVIDER);
 
             try {
-                if (command.equals("list")) {
+                switch (commandType) {
+                case LIST:
                     System.out.println(INDENT + "Here are the tasks in your list:");
                     for (int i = 0; i < tasks.size(); i++) {
                         System.out.println(INDENT + (i + 1) + "." + tasks.get(i));
                     }
-                } else if (command.equals("mark") || command.startsWith("mark ")) {
-                    int taskIndex = parseTaskIndex(command, "mark", tasks.size());
+                    break;
+                case MARK:
+                    int taskIndex = parseTaskIndex(command, commandType, tasks.size());
                     tasks.get(taskIndex).markAsDone();
                     System.out.println(INDENT + "Nice! I've marked this task as done:");
                     System.out.println(INDENT + INDENT + tasks.get(taskIndex));
-                } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-                    int taskIndex = parseTaskIndex(command, "unmark", tasks.size());
+                    break;
+                case UNMARK:
+                    taskIndex = parseTaskIndex(command, commandType, tasks.size());
                     tasks.get(taskIndex).markAsNotDone();
                     System.out.println(INDENT + "OK, I've marked this task as not done yet:");
                     System.out.println(INDENT + INDENT + tasks.get(taskIndex));
-                } else if (command.equals("delete") || command.startsWith("delete ")) {
-                    int taskIndex = parseTaskIndex(command, "delete", tasks.size());
+                    break;
+                case DELETE:
+                    taskIndex = parseTaskIndex(command, commandType, tasks.size());
                     Task deletedTask = tasks.remove(taskIndex);
                     printTaskDeleted(deletedTask, tasks.size());
-                } else if (command.equals("todo") || command.startsWith("todo ")) {
-                    String description = command.substring(4).trim();
+                    break;
+                case TODO:
+                    String description = getCommandArguments(command, commandType);
                     if (description.isEmpty()) {
                         throw new MintyException("Hmm, a todo needs a description.");
                     }
                     Task todo = new Todo(description);
                     tasks.add(todo);
                     printTaskAdded(todo, tasks.size());
-                } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+                    break;
+                case DEADLINE:
                     Deadline deadline = parseDeadline(command);
                     tasks.add(deadline);
                     printTaskAdded(deadline, tasks.size());
-                } else if (command.equals("event") || command.startsWith("event ")) {
+                    break;
+                case EVENT:
                     Event event = parseEvent(command);
                     tasks.add(event);
                     printTaskAdded(event, tasks.size());
-                } else {
+                    break;
+                case BYE:
+                case UNKNOWN:
+                default:
                     throw new MintyException("Sorry, I don't understand that command.");
                 }
             } catch (MintyException exception) {
@@ -93,14 +104,15 @@ public class Minty {
      * Parses and validates the task number supplied to a task-selection command.
      *
      * @param command complete command entered by the user
-     * @param commandWord command name, such as {@code mark}, {@code unmark}, or {@code delete}
+     * @param commandType task-selection command type
      * @param taskCount current number of stored tasks
      * @return zero-based index of the selected task
      * @throws MintyException if the task number is missing, non-numeric, or out of range
      */
-    private static int parseTaskIndex(String command, String commandWord, int taskCount)
+    private static int parseTaskIndex(String command, CommandType commandType, int taskCount)
             throws MintyException {
-        String taskNumber = command.substring(commandWord.length()).trim();
+        String commandWord = commandType.getCommandWord();
+        String taskNumber = getCommandArguments(command, commandType);
         if (taskNumber.isEmpty()) {
             throw new MintyException("Please provide a task number to " + commandWord + ".");
         }
@@ -116,6 +128,17 @@ public class Minty {
             throw new MintyException("That task number is not in your list.");
         }
         return taskIndex;
+    }
+
+    /**
+     * Returns the trimmed text following a command's identifying word.
+     *
+     * @param command complete command entered by the user
+     * @param commandType recognized type of the command
+     * @return trimmed command arguments, or an empty string if none were supplied
+     */
+    private static String getCommandArguments(String command, CommandType commandType) {
+        return command.substring(commandType.getCommandWord().length()).trim();
     }
 
     /**
