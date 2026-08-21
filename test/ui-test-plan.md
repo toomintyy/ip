@@ -1,4 +1,4 @@
-# Minty Level 4 UI Test Plan
+# Minty Level 6 UI Test Plan
 
 These tests run with Java 25. Each test starts a fresh instance of Minty and compares the complete console output exactly.
 
@@ -60,7 +60,70 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
-## TC2: Reject an empty todo and an unknown command
+## TC2: Delete a task and validate delete arguments
+
+Aim: Verify that deletion removes the selected task, renumbers later tasks, reports the remaining count, and rejects invalid task numbers without changing the list.
+
+### Input
+
+```text
+todo first
+deadline second /by Friday
+delete 1
+delete
+delete two
+delete 2
+list
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [T][ ] first
+  Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [D][ ] second (by: Friday)
+  Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  Noted. I've removed this task:
+    [T][ ] first
+  Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  Please provide a task number to delete.
+____________________________________________________________
+____________________________________________________________
+  The task number must be a whole number.
+____________________________________________________________
+____________________________________________________________
+  That task number is not in your list.
+____________________________________________________________
+____________________________________________________________
+  Here are the tasks in your list:
+  1.[D][ ] second (by: Friday)
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC3: Reject an empty todo and an unknown command
 
 Aim: Verify that Minty explains an empty todo description and an unrecognized command without adding a task or terminating the session.
 
@@ -96,7 +159,7 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
-## TC3: Preserve multi-word date and time strings
+## TC4: Preserve multi-word date and time strings
 
 Aim: Verify that deadline and event date/time values are treated as unchanged strings, including date ranges and spaces.
 
@@ -142,7 +205,7 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
-## TC4: Continue after malformed commands
+## TC5: Continue after malformed commands
 
 Aim: Verify that empty input, invalid task numbers, and incomplete deadline or event commands produce helpful errors without crashing or losing existing tasks.
 
@@ -241,7 +304,7 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
-## TC5: Preserve state across interleaved successes and errors
+## TC6: Preserve state across interleaved successes and errors
 
 Aim: Verify that rejected add and status commands do not change task count, ordering, task details, or completion states while later valid commands still work.
 
@@ -343,7 +406,7 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
-## TC6: Handle numeric boundaries and surrounding whitespace
+## TC7: Handle numeric boundaries and surrounding whitespace
 
 Aim: Verify that descriptions are trimmed, valid signed or zero-padded task numbers select the intended task, and non-positive, overflowing, or missing task numbers leave state unchanged.
 

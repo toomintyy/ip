@@ -55,6 +55,15 @@ public class Minty {
                     tasks[taskIndex].markAsNotDone();
                     System.out.println(INDENT + "OK, I've marked this task as not done yet:");
                     System.out.println(INDENT + INDENT + tasks[taskIndex]);
+                } else if (command.equals("delete") || command.startsWith("delete ")) {
+                    int taskIndex = parseTaskIndex(command, "delete", taskCount);
+                    Task deletedTask = tasks[taskIndex];
+                    for (int i = taskIndex; i < taskCount - 1; i++) {
+                        tasks[i] = tasks[i + 1];
+                    }
+                    taskCount--;
+                    tasks[taskCount] = null;
+                    printTaskDeleted(deletedTask, taskCount);
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String description = command.substring(4).trim();
                     if (description.isEmpty()) {
@@ -92,10 +101,10 @@ public class Minty {
     }
 
     /**
-     * Parses and validates the task number supplied to a mark or unmark command.
+     * Parses and validates the task number supplied to a task-selection command.
      *
      * @param command complete command entered by the user
-     * @param commandWord command name, either {@code mark} or {@code unmark}
+     * @param commandWord command name, such as {@code mark}, {@code unmark}, or {@code delete}
      * @param taskCount current number of stored tasks
      * @return zero-based index of the selected task
      * @throws MintyException if the task number is missing, non-numeric, or out of range
@@ -202,6 +211,18 @@ public class Minty {
      */
     private static void printTaskAdded(Task task, int taskCount) {
         System.out.println(INDENT + "Got it. I've added this task:");
+        System.out.println(INDENT + INDENT + task);
+        System.out.println(INDENT + "Now you have " + taskCount + " tasks in the list.");
+    }
+
+    /**
+     * Prints the confirmation shown after a task is deleted.
+     *
+     * @param task task that was deleted
+     * @param taskCount number of tasks remaining
+     */
+    private static void printTaskDeleted(Task task, int taskCount) {
+        System.out.println(INDENT + "Noted. I've removed this task:");
         System.out.println(INDENT + INDENT + task);
         System.out.println(INDENT + "Now you have " + taskCount + " tasks in the list.");
     }
