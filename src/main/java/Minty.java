@@ -1,10 +1,10 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
  * Runs Minty, a simple command-line chatbot.
  */
 public class Minty {
-    private static final int MAX_TASKS = 100;
     private static final String DIVIDER = "____________________________________________________________";
     private static final String INDENT = "  ";
     private static final String BANNER =
@@ -23,8 +23,7 @@ public class Minty {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[MAX_TASKS];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         System.out.println(DIVIDER);
         System.out.print(BANNER);
@@ -42,49 +41,39 @@ public class Minty {
             try {
                 if (command.equals("list")) {
                     System.out.println(INDENT + "Here are the tasks in your list:");
-                    for (int i = 0; i < taskCount; i++) {
-                        System.out.println(INDENT + (i + 1) + "." + tasks[i]);
+                    for (int i = 0; i < tasks.size(); i++) {
+                        System.out.println(INDENT + (i + 1) + "." + tasks.get(i));
                     }
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
-                    int taskIndex = parseTaskIndex(command, "mark", taskCount);
-                    tasks[taskIndex].markAsDone();
+                    int taskIndex = parseTaskIndex(command, "mark", tasks.size());
+                    tasks.get(taskIndex).markAsDone();
                     System.out.println(INDENT + "Nice! I've marked this task as done:");
-                    System.out.println(INDENT + INDENT + tasks[taskIndex]);
+                    System.out.println(INDENT + INDENT + tasks.get(taskIndex));
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-                    int taskIndex = parseTaskIndex(command, "unmark", taskCount);
-                    tasks[taskIndex].markAsNotDone();
+                    int taskIndex = parseTaskIndex(command, "unmark", tasks.size());
+                    tasks.get(taskIndex).markAsNotDone();
                     System.out.println(INDENT + "OK, I've marked this task as not done yet:");
-                    System.out.println(INDENT + INDENT + tasks[taskIndex]);
+                    System.out.println(INDENT + INDENT + tasks.get(taskIndex));
                 } else if (command.equals("delete") || command.startsWith("delete ")) {
-                    int taskIndex = parseTaskIndex(command, "delete", taskCount);
-                    Task deletedTask = tasks[taskIndex];
-                    for (int i = taskIndex; i < taskCount - 1; i++) {
-                        tasks[i] = tasks[i + 1];
-                    }
-                    taskCount--;
-                    tasks[taskCount] = null;
-                    printTaskDeleted(deletedTask, taskCount);
+                    int taskIndex = parseTaskIndex(command, "delete", tasks.size());
+                    Task deletedTask = tasks.remove(taskIndex);
+                    printTaskDeleted(deletedTask, tasks.size());
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String description = command.substring(4).trim();
                     if (description.isEmpty()) {
                         throw new MintyException("Hmm, a todo needs a description.");
                     }
-                    ensureTaskCapacity(taskCount);
-                    tasks[taskCount] = new Todo(description);
-                    taskCount++;
-                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                    Task todo = new Todo(description);
+                    tasks.add(todo);
+                    printTaskAdded(todo, tasks.size());
                 } else if (command.equals("deadline") || command.startsWith("deadline ")) {
                     Deadline deadline = parseDeadline(command);
-                    ensureTaskCapacity(taskCount);
-                    tasks[taskCount] = deadline;
-                    taskCount++;
-                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                    tasks.add(deadline);
+                    printTaskAdded(deadline, tasks.size());
                 } else if (command.equals("event") || command.startsWith("event ")) {
                     Event event = parseEvent(command);
-                    ensureTaskCapacity(taskCount);
-                    tasks[taskCount] = event;
-                    taskCount++;
-                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                    tasks.add(event);
+                    printTaskAdded(event, tasks.size());
                 } else {
                     throw new MintyException("Sorry, I don't understand that command.");
                 }
@@ -189,18 +178,6 @@ public class Minty {
             throw new MintyException("Please say when the event ends after /to.");
         }
         return new Event(description, from, to);
-    }
-
-    /**
-     * Ensures another task can be stored in Minty's fixed-size task list.
-     *
-     * @param taskCount current number of stored tasks
-     * @throws MintyException if the list is already full
-     */
-    private static void ensureTaskCapacity(int taskCount) throws MintyException {
-        if (taskCount >= MAX_TASKS) {
-            throw new MintyException("Your task list is full, so I can't add another task.");
-        }
     }
 
     /**
