@@ -47,7 +47,34 @@ ____________________________________________________________
   Bye. Hope to see you again soon!
 ____________________________________________________________
 
-=== TC2: Preserve multi-word date and time strings ===
+=== TC2: Reject an empty todo and an unknown command ===
+Aim: Verify that Minty explains an empty todo description and an unrecognized command without adding a task or terminating the session.
+--- Console input ---
+todo
+blah
+bye
+--- Console output ---
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Hmm, a todo needs a description.
+____________________________________________________________
+____________________________________________________________
+  Sorry, I don't understand that command.
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+
+=== TC3: Preserve multi-word date and time strings ===
 Aim: Verify that deadline and event date/time values are treated as unchanged strings, including date ranges and spaces.
 --- Console input ---
 deadline submit report /by 11/10/2019 5pm

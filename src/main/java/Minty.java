@@ -51,10 +51,15 @@ public class Minty {
                 tasks[taskIndex].markAsNotDone();
                 System.out.println(INDENT + "OK, I've marked this task as not done yet:");
                 System.out.println(INDENT + INDENT + tasks[taskIndex]);
-            } else if (command.startsWith("todo ")) {
-                tasks[taskCount] = new Todo(command.substring(5));
-                taskCount++;
-                printTaskAdded(tasks[taskCount - 1], taskCount);
+            } else if (command.equals("todo") || command.startsWith("todo ")) {
+                String description = command.substring(4).trim();
+                if (description.isEmpty()) {
+                    System.out.println(INDENT + "Hmm, a todo needs a description.");
+                } else {
+                    tasks[taskCount] = new Todo(description);
+                    taskCount++;
+                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                }
             } else if (command.startsWith("deadline ")) {
                 String details = command.substring(9);
                 int bySeparator = details.indexOf(" /by ");
@@ -73,6 +78,8 @@ public class Minty {
                 tasks[taskCount] = new Event(description, from, to);
                 taskCount++;
                 printTaskAdded(tasks[taskCount - 1], taskCount);
+            } else {
+                System.out.println(INDENT + "Sorry, I don't understand that command.");
             }
 
             System.out.println(DIVIDER);
