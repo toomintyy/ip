@@ -1,4 +1,4 @@
-# Minty Level 6 UI Test Plan
+# Minty Level 7 Write-Path UI Test Plan
 
 These tests run with Java 25. Each test starts a fresh instance of Minty and compares the complete console output exactly.
 
@@ -6,14 +6,15 @@ These tests run with Java 25. Each test starts a fresh instance of Minty and com
 
 | Behavior | Happy path | Error and boundary coverage |
 | --- | --- | --- |
-| `todo` | TC1, TC8 | TC4 |
-| `deadline` | TC1, TC5, TC6 | TC6 |
-| `event` | TC1, TC5, TC7 | TC7 |
+| `todo` | TC1, TC8, TC9 | TC4 |
+| `deadline` | TC1, TC5, TC6, TC9 | TC6 |
+| `event` | TC1, TC5, TC7, TC9 | TC7 |
 | `list` | TC1, TC2, TC3, TC5–TC8 | TC3 checks an empty list |
-| `mark` and `unmark` | TC1, TC2, TC8 | TC8 |
-| `delete` | TC2 | TC3 |
+| `mark` and `unmark` | TC1, TC2, TC8, TC9 | TC8 |
+| `delete` | TC2, TC9 | TC3 |
 | Unknown or empty command | — | TC4 |
-| Startup and `bye` | TC1–TC8 | — |
+| Save after task-list changes | TC9 | — |
+| Startup and `bye` | TC1–TC9 | — |
 
 The use of `ArrayList<Task>` is an implementation detail and is verified by code review rather than console output. The UI tests verify its observable add, lookup, renumbering, and deletion behavior.
 
@@ -496,6 +497,68 @@ ____________________________________________________________
   1.[T][ ] trimmed task
   2.[D][ ] report (by: no idea :-p)
   3.[E][ ] trip (from: day one to: day two)
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC9: Save after every task-list change
+
+Aim: Verify that adding each task type, marking, deleting, and unmarking still produce the expected UI while each successful change triggers the Level 7 write path.
+
+### Input
+
+```text
+todo read book
+deadline return book /by June 6th
+event project meeting /from Aug 6th 2pm /to 4pm
+mark 1
+delete 2
+unmark 1
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [T][ ] read book
+  Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [D][ ] return book (by: June 6th)
+  Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+  Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  Nice! I've marked this task as done:
+    [T][X] read book
+____________________________________________________________
+____________________________________________________________
+  Noted. I've removed this task:
+    [D][ ] return book (by: June 6th)
+  Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  OK, I've marked this task as not done yet:
+    [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!

@@ -15,6 +15,16 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    /**
+     * Returns the deadline in the format used by the save file.
+     *
+     * @return serialized deadline
+     */
+    @Override
+    public String toDataString() {
+        return "D | " + (isDone ? "1" : "0") + " | " + description + " | " + by;
+    }
+
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by + ")";

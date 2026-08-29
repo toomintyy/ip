@@ -39,6 +39,15 @@ public class Task {
     }
 
     /**
+     * Returns the task in the format used by the save file.
+     *
+     * @return serialized task
+     */
+    public String toDataString() {
+        return "T | " + (isDone ? "1" : "0") + " | " + description;
+    }
+
+    /**
      * Returns the task in the format used by Minty's responses.
      *
      * @return status icon followed by the task description
