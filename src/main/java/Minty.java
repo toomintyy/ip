@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -23,7 +25,8 @@ public class Minty {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        Storage storage = new Storage(Path.of("data", "minty.txt"));
+        ArrayList<Task> tasks = loadTasks(storage);
 
         System.out.println(DIVIDER);
         System.out.print(BANNER);
@@ -50,18 +53,21 @@ public class Minty {
                 case MARK:
                     int taskIndex = parseTaskIndex(command, commandType, tasks.size());
                     tasks.get(taskIndex).markAsDone();
+                    saveTasks(storage, tasks);
                     System.out.println(INDENT + "Nice! I've marked this task as done:");
                     System.out.println(INDENT + INDENT + tasks.get(taskIndex));
                     break;
                 case UNMARK:
                     taskIndex = parseTaskIndex(command, commandType, tasks.size());
                     tasks.get(taskIndex).markAsNotDone();
+                    saveTasks(storage, tasks);
                     System.out.println(INDENT + "OK, I've marked this task as not done yet:");
                     System.out.println(INDENT + INDENT + tasks.get(taskIndex));
                     break;
                 case DELETE:
                     taskIndex = parseTaskIndex(command, commandType, tasks.size());
                     Task deletedTask = tasks.remove(taskIndex);
+                    saveTasks(storage, tasks);
                     printTaskDeleted(deletedTask, tasks.size());
                     break;
                 case TODO:
@@ -71,16 +77,19 @@ public class Minty {
                     }
                     Task todo = new Todo(description);
                     tasks.add(todo);
+                    saveTasks(storage, tasks);
                     printTaskAdded(todo, tasks.size());
                     break;
                 case DEADLINE:
                     Deadline deadline = parseDeadline(command);
                     tasks.add(deadline);
+                    saveTasks(storage, tasks);
                     printTaskAdded(deadline, tasks.size());
                     break;
                 case EVENT:
                     Event event = parseEvent(command);
                     tasks.add(event);
+                    saveTasks(storage, tasks);
                     printTaskAdded(event, tasks.size());
                     break;
                 case BYE:
@@ -235,5 +244,34 @@ public class Minty {
     private static void printTaskCount(int taskCount) {
         String taskNoun = taskCount == 1 ? "task" : "tasks";
         System.out.println(INDENT + "Now you have " + taskCount + " " + taskNoun + " in the list.");
+    }
+
+    /**
+     * Writes the current task list to disk.
+     *
+     * @param storage destination for the task data
+     * @param tasks current task list
+     */
+    private static void saveTasks(Storage storage, ArrayList<Task> tasks) {
+        try {
+            storage.saveTasks(tasks);
+        } catch (IOException exception) {
+            System.out.println(INDENT + "I couldn't save the tasks: " + exception.getMessage());
+        }
+    }
+
+    /**
+     * Loads the saved task list, or starts with an empty list if reading fails.
+     *
+     * @param storage source of saved task data
+     * @return saved tasks, or an empty list when the file cannot be read
+     */
+    private static ArrayList<Task> loadTasks(Storage storage) {
+        try {
+            return storage.loadTasks();
+        } catch (IOException | MintyException exception) {
+            System.out.println(INDENT + "I couldn't load the tasks: " + exception.getMessage());
+            return new ArrayList<>();
+        }
     }
 }

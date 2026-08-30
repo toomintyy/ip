@@ -18,6 +18,18 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * Returns the event in the format used by the save file.
+     *
+     * @return serialized event
+     */
+    @Override
+    public String toDataString() {
+        return "E | " + (isDone ? "1" : "0") + " | "
+                + escapeDataField(description) + " | " + escapeDataField(from)
+                + " | " + escapeDataField(to);
+    }
+
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";

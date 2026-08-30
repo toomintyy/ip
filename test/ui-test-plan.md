@@ -1,4 +1,4 @@
-# Minty Level 6 UI Test Plan
+# Minty Level 7 UI Test Plan
 
 These tests run with Java 25. Each test starts a fresh instance of Minty and compares the complete console output exactly.
 
@@ -6,14 +6,24 @@ These tests run with Java 25. Each test starts a fresh instance of Minty and com
 
 | Behavior | Happy path | Error and boundary coverage |
 | --- | --- | --- |
-| `todo` | TC1, TC8 | TC4 |
-| `deadline` | TC1, TC5, TC6 | TC6 |
-| `event` | TC1, TC5, TC7 | TC7 |
-| `list` | TC1, TC2, TC3, TC5–TC8 | TC3 checks an empty list |
-| `mark` and `unmark` | TC1, TC2, TC8 | TC8 |
-| `delete` | TC2 | TC3 |
+| `todo` | TC1, TC8–TC10 | TC4 |
+| `deadline` | TC1, TC5, TC6, TC9, TC10 | TC6 |
+| `event` | TC1, TC5, TC7, TC9, TC10 | TC7 |
+| `list` | TC1, TC2, TC3, TC5–TC8, TC10 | TC3 checks an empty list |
+| `mark` and `unmark` | TC1, TC2, TC8, TC9 | TC8 |
+| `delete` | TC2, TC9 | TC3 |
 | Unknown or empty command | — | TC4 |
-| Startup and `bye` | TC1–TC8 | — |
+| Save after task-list changes | TC9 | — |
+| Missing data file and folder | TC9 | — |
+| Load task types and statuses | TC10 | — |
+| Blank lines and escaped delimiters | TC11 | — |
+| Invalid saved task status | — | TC12 |
+| Unknown saved task type | — | TC13 |
+| Missing saved task fields | — | TC14 |
+| Empty saved task details | — | TC15 |
+| Invalid saved escape sequence | — | TC16 |
+| Unsupported saved escape sequence | — | TC17 |
+| Startup and `bye` | TC1–TC17 | — |
 
 The use of `ArrayList<Task>` is an implementation detail and is verified by code review rather than console output. The UI tests verify its observable add, lookup, renumbering, and deletion behavior.
 
@@ -496,6 +506,311 @@ ____________________________________________________________
   1.[T][ ] trimmed task
   2.[D][ ] report (by: no idea :-p)
   3.[E][ ] trip (from: day one to: day two)
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC9: Save after every task-list change
+
+Aim: Verify that Minty starts without an existing data file or folder, creates both automatically, and writes after each successful add, mark, delete, and unmark operation.
+
+### Input
+
+```text
+todo read book
+deadline return book /by June 6th
+event project meeting /from Aug 6th 2pm /to 4pm
+mark 1
+delete 2
+unmark 1
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [T][ ] read book
+  Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [D][ ] return book (by: June 6th)
+  Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+  Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  Nice! I've marked this task as done:
+    [T][X] read book
+____________________________________________________________
+____________________________________________________________
+  Noted. I've removed this task:
+    [D][ ] return book (by: June 6th)
+  Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  OK, I've marked this task as not done yet:
+    [T][ ] read book
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC10: Load saved task types and statuses
+
+Aim: Verify that Minty loads the Todo, Deadline, and Event in `test/data/TC10.txt`, including a completed task, before processing the first command.
+
+### Input
+
+```text
+list
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Here are the tasks in your list:
+  1.[T][X] read book
+  2.[D][ ] return book (by: June 6th)
+  3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC11: Load blank lines and escaped delimiters
+
+Aim: Verify that blank save-file lines are ignored and escaped pipe and backslash characters are restored as ordinary task text.
+
+### Input
+
+```text
+list
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Here are the tasks in your list:
+  1.[T][X] compare | alternatives
+  2.[D][ ] use C:\temp (by: Friday | Saturday)
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC12: Reject an invalid saved status
+
+Aim: Verify that a completion status other than `0` or `1` produces a clear error and starts Minty with an empty list instead of crashing.
+
+### Input
+
+```text
+bye
+```
+
+### Expected output
+
+```text
+  I couldn't load the tasks: Invalid data on line 1: status must be 0 or 1.
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC13: Reject an unknown saved task type
+
+Aim: Verify that an unknown task type produces a line-specific error and starts Minty safely.
+
+### Input
+
+```text
+bye
+```
+
+### Expected output
+
+```text
+  I couldn't load the tasks: Invalid data on line 1: unknown task type 'N'.
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC14: Reject missing saved task fields
+
+Aim: Verify that a task with too few fields produces a line-specific error and starts Minty safely.
+
+### Input
+
+```text
+bye
+```
+
+### Expected output
+
+```text
+  I couldn't load the tasks: Invalid data on line 1: expected 4 fields but found 3.
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC15: Reject empty saved task details
+
+Aim: Verify that an empty required task field produces a line-specific error and starts Minty safely.
+
+### Input
+
+```text
+bye
+```
+
+### Expected output
+
+```text
+  I couldn't load the tasks: Invalid data on line 1: task details cannot be empty.
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC16: Reject an unfinished saved escape sequence
+
+Aim: Verify that a trailing escape character produces a line-specific error and starts Minty safely.
+
+### Input
+
+```text
+bye
+```
+
+### Expected output
+
+```text
+  I couldn't load the tasks: Invalid data on line 1: unfinished escape character.
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC17: Reject an unsupported saved escape sequence
+
+Aim: Verify that an escape character before an unsupported character produces a line-specific error and starts Minty safely.
+
+### Input
+
+```text
+bye
+```
+
+### Expected output
+
+```text
+  I couldn't load the tasks: Invalid data on line 1: unsupported escape sequence '\q'.
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!

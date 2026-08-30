@@ -39,6 +39,25 @@ public class Task {
     }
 
     /**
+     * Returns the task in the format used by the save file.
+     *
+     * @return serialized task
+     */
+    public String toDataString() {
+        return "T | " + (isDone ? "1" : "0") + " | " + escapeDataField(description);
+    }
+
+    /**
+     * Escapes characters that have special meaning in the save-file format.
+     *
+     * @param value task field to escape
+     * @return escaped field
+     */
+    protected static String escapeDataField(String value) {
+        return value.replace("\\", "\\\\").replace("|", "\\|");
+    }
+
+    /**
      * Returns the task in the format used by Minty's responses.
      *
      * @return status icon followed by the task description

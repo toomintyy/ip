@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import difflib
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -14,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[4]
 PLAN = ROOT / "test" / "ui-test-plan.md"
 TRANSCRIPT = ROOT / "test" / "ui-test-session.txt"
 CLASSES = ROOT / "build" / "ui-test-classes"
+DATA_FILE = ROOT / "data" / "minty.txt"
+FIXTURES = ROOT / "test" / "data"
 CASE_PATTERN = re.compile(
     r"^## (?P<id>TC\d+): (?P<name>.+?)\n\n"
     r"Aim: (?P<aim>.+?)\n\n"
@@ -49,6 +52,16 @@ def main() -> int:
     records: list[str] = []
 
     for case in cases:
+        DATA_FILE.unlink(missing_ok=True)
+        try:
+            DATA_FILE.parent.rmdir()
+        except OSError:
+            pass
+        fixture = FIXTURES / f"{case['id']}.txt"
+        if fixture.exists():
+            DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(fixture, DATA_FILE)
+
         command_input = case["input"]
         expected = case["expected"]
         result = subprocess.run(
