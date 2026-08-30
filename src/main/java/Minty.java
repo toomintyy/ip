@@ -41,11 +41,19 @@ public class Minty {
     public void run() {
         ui.showWelcome();
 
-        while (ui.hasNextCommand()) {
+        boolean isExit = false;
+        while (!isExit && ui.hasNextCommand()) {
             String command = ui.readCommand();
             CommandType commandType = Parser.parseCommandType(command);
             if (commandType == CommandType.BYE) {
-                break;
+                Command exitCommand = new ExitCommand();
+                try {
+                    exitCommand.execute(tasks, ui, storage);
+                    isExit = exitCommand.isExit();
+                } catch (MintyException exception) {
+                    ui.showError(exception.getMessage());
+                }
+                continue;
             }
             ui.showDivider();
 
