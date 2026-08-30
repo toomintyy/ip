@@ -11,17 +11,34 @@ public class Minty {
     private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
             DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
 
+    private final Ui ui;
+    private final Storage storage;
+    private final TaskList tasks;
+
     /**
-     * Greets the user, stores tasks, lists stored tasks, updates task completion
-     * statuses, and exits when the user enters {@code bye}.
+     * Creates Minty with task storage at the specified path.
+     *
+     * @param filePath path to the task data file
+     */
+    public Minty(Path filePath) {
+        this.ui = new Ui();
+        this.storage = new Storage(filePath);
+        this.tasks = loadTasks();
+    }
+
+    /**
+     * Starts Minty using the default relative, OS-independent data path.
      *
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
-        Ui ui = new Ui();
-        Storage storage = new Storage(Path.of("data", "minty.txt"));
-        TaskList tasks = loadTasks(storage, ui);
+        new Minty(Path.of("data", "minty.txt")).run();
+    }
 
+    /**
+     * Runs Minty's command loop until the user exits or input ends.
+     */
+    public void run() {
         ui.showWelcome();
 
         while (ui.hasNextCommand()) {
@@ -38,43 +55,43 @@ public class Minty {
                     ui.showTaskList(tasks);
                     break;
                 case ON:
-                    printTasksOnDate(command, tasks, ui);
+                    printTasksOnDate(command);
                     break;
                 case MARK:
                     int taskIndex = Parser.parseTaskIndex(command, commandType, tasks.size());
                     Task markedTask = tasks.mark(taskIndex);
-                    saveTasks(storage, tasks, ui);
+                    saveTasks();
                     ui.showTask("Nice! I've marked this task as done:", markedTask);
                     break;
                 case UNMARK:
                     taskIndex = Parser.parseTaskIndex(command, commandType, tasks.size());
                     Task unmarkedTask = tasks.unmark(taskIndex);
-                    saveTasks(storage, tasks, ui);
+                    saveTasks();
                     ui.showTask("OK, I've marked this task as not done yet:", unmarkedTask);
                     break;
                 case DELETE:
                     taskIndex = Parser.parseTaskIndex(command, commandType, tasks.size());
                     Task deletedTask = tasks.delete(taskIndex);
-                    saveTasks(storage, tasks, ui);
-                    printTaskDeleted(deletedTask, tasks.size(), ui);
+                    saveTasks();
+                    printTaskDeleted(deletedTask);
                     break;
                 case TODO:
                     Task todo = Parser.parseTodo(command);
                     tasks.add(todo);
-                    saveTasks(storage, tasks, ui);
-                    printTaskAdded(todo, tasks.size(), ui);
+                    saveTasks();
+                    printTaskAdded(todo);
                     break;
                 case DEADLINE:
                     Deadline deadline = Parser.parseDeadline(command);
                     tasks.add(deadline);
-                    saveTasks(storage, tasks, ui);
-                    printTaskAdded(deadline, tasks.size(), ui);
+                    saveTasks();
+                    printTaskAdded(deadline);
                     break;
                 case EVENT:
                     Event event = Parser.parseEvent(command);
                     tasks.add(event);
-                    saveTasks(storage, tasks, ui);
-                    printTaskAdded(event, tasks.size(), ui);
+                    saveTasks();
+                    printTaskAdded(event);
                     break;
                 case BYE:
                 case UNKNOWN:
@@ -95,12 +112,9 @@ public class Minty {
      * Prints dated tasks that occur on a requested date.
      *
      * @param command complete {@code on} command
-     * @param tasks current task list
-     * @param ui command-line interface used to display matching tasks
      * @throws MintyException if the requested date is missing or invalid
      */
-    private static void printTasksOnDate(String command, TaskList tasks, Ui ui)
-            throws MintyException {
+    private void printTasksOnDate(String command) throws MintyException {
         LocalDate date = Parser.parseOnDate(command);
         ui.showMessage("Here are the tasks occurring on " + date.format(DISPLAY_DATE_FORMAT) + ":");
 
@@ -118,34 +132,26 @@ public class Minty {
      * Prints the confirmation shown after a task is added.
      *
      * @param task task that was added
-     * @param taskCount current number of stored tasks
-     * @param ui command-line interface used to show the confirmation
      */
-    private static void printTaskAdded(Task task, int taskCount, Ui ui) {
+    private void printTaskAdded(Task task) {
         ui.showTask("Got it. I've added this task:", task);
-        ui.showTaskCount(taskCount);
+        ui.showTaskCount(tasks.size());
     }
 
     /**
      * Prints the confirmation shown after a task is deleted.
      *
      * @param task task that was deleted
-     * @param taskCount number of tasks remaining
-     * @param ui command-line interface used to show the confirmation
      */
-    private static void printTaskDeleted(Task task, int taskCount, Ui ui) {
+    private void printTaskDeleted(Task task) {
         ui.showTask("Noted. I've removed this task:", task);
-        ui.showTaskCount(taskCount);
+        ui.showTaskCount(tasks.size());
     }
 
     /**
      * Writes the current task list to disk.
-     *
-     * @param storage destination for the task data
-     * @param tasks current task list
-     * @param ui command-line interface used to report a save error
      */
-    private static void saveTasks(Storage storage, TaskList tasks, Ui ui) {
+    private void saveTasks() {
         try {
             storage.saveTasks(tasks);
         } catch (IOException exception) {
@@ -156,11 +162,9 @@ public class Minty {
     /**
      * Loads the saved task list, or starts with an empty list if reading fails.
      *
-     * @param storage source of saved task data
-     * @param ui command-line interface used to report a loading error
      * @return saved tasks, or an empty list when the file cannot be read
      */
-    private static TaskList loadTasks(Storage storage, Ui ui) {
+    private TaskList loadTasks() {
         try {
             return new TaskList(storage.loadTasks());
         } catch (IOException | MintyException exception) {
