@@ -5,23 +5,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Scanner;
 
 /**
  * Runs Minty, a simple command-line chatbot.
  */
 public class Minty {
-    private static final String DIVIDER = "____________________________________________________________";
-    private static final String INDENT = "  ";
     private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
             DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
-    private static final String BANNER =
-              "███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗\n"
-            + "████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝\n"
-            + "██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝\n"
-            + "██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝\n"
-            + "██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║\n"
-            + "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝\n";
 
     /**
      * Greets the user, stores tasks, lists stored tasks, updates task completion
@@ -30,54 +20,45 @@ public class Minty {
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Ui ui = new Ui();
         Storage storage = new Storage(Path.of("data", "minty.txt"));
-        ArrayList<Task> tasks = loadTasks(storage);
+        ArrayList<Task> tasks = loadTasks(storage, ui);
 
-        System.out.println(DIVIDER);
-        System.out.print(BANNER);
-        System.out.println(INDENT + "Heyyy! I'm Feeling Minty.");
-        System.out.println(INDENT + "What can I do for you today?");
-        System.out.println(DIVIDER);
+        ui.showWelcome();
 
-        while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
+        while (ui.hasNextCommand()) {
+            String command = ui.readCommand();
             CommandType commandType = CommandType.from(command);
             if (commandType == CommandType.BYE) {
                 break;
             }
-            System.out.println(DIVIDER);
+            ui.showDivider();
 
             try {
                 switch (commandType) {
                 case LIST:
-                    System.out.println(INDENT + "Here are the tasks in your list:");
-                    for (int i = 0; i < tasks.size(); i++) {
-                        System.out.println(INDENT + (i + 1) + "." + tasks.get(i));
-                    }
+                    ui.showTaskList(tasks);
                     break;
                 case ON:
-                    printTasksOnDate(command, commandType, tasks);
+                    printTasksOnDate(command, commandType, tasks, ui);
                     break;
                 case MARK:
                     int taskIndex = parseTaskIndex(command, commandType, tasks.size());
                     tasks.get(taskIndex).markAsDone();
-                    saveTasks(storage, tasks);
-                    System.out.println(INDENT + "Nice! I've marked this task as done:");
-                    System.out.println(INDENT + INDENT + tasks.get(taskIndex));
+                    saveTasks(storage, tasks, ui);
+                    ui.showTask("Nice! I've marked this task as done:", tasks.get(taskIndex));
                     break;
                 case UNMARK:
                     taskIndex = parseTaskIndex(command, commandType, tasks.size());
                     tasks.get(taskIndex).markAsNotDone();
-                    saveTasks(storage, tasks);
-                    System.out.println(INDENT + "OK, I've marked this task as not done yet:");
-                    System.out.println(INDENT + INDENT + tasks.get(taskIndex));
+                    saveTasks(storage, tasks, ui);
+                    ui.showTask("OK, I've marked this task as not done yet:", tasks.get(taskIndex));
                     break;
                 case DELETE:
                     taskIndex = parseTaskIndex(command, commandType, tasks.size());
                     Task deletedTask = tasks.remove(taskIndex);
-                    saveTasks(storage, tasks);
-                    printTaskDeleted(deletedTask, tasks.size());
+                    saveTasks(storage, tasks, ui);
+                    printTaskDeleted(deletedTask, tasks.size(), ui);
                     break;
                 case TODO:
                     String description = getCommandArguments(command, commandType);
@@ -86,20 +67,20 @@ public class Minty {
                     }
                     Task todo = new Todo(description);
                     tasks.add(todo);
-                    saveTasks(storage, tasks);
-                    printTaskAdded(todo, tasks.size());
+                    saveTasks(storage, tasks, ui);
+                    printTaskAdded(todo, tasks.size(), ui);
                     break;
                 case DEADLINE:
                     Deadline deadline = parseDeadline(command);
                     tasks.add(deadline);
-                    saveTasks(storage, tasks);
-                    printTaskAdded(deadline, tasks.size());
+                    saveTasks(storage, tasks, ui);
+                    printTaskAdded(deadline, tasks.size(), ui);
                     break;
                 case EVENT:
                     Event event = parseEvent(command);
                     tasks.add(event);
-                    saveTasks(storage, tasks);
-                    printTaskAdded(event, tasks.size());
+                    saveTasks(storage, tasks, ui);
+                    printTaskAdded(event, tasks.size(), ui);
                     break;
                 case BYE:
                 case UNKNOWN:
@@ -107,15 +88,13 @@ public class Minty {
                     throw new MintyException("Sorry, I don't understand that command.");
                 }
             } catch (MintyException exception) {
-                System.out.println(INDENT + exception.getMessage());
+                ui.showError(exception.getMessage());
             }
 
-            System.out.println(DIVIDER);
+            ui.showDivider();
         }
 
-        System.out.println(DIVIDER);
-        System.out.println(INDENT + "Bye. Hope to see you again soon!");
-        System.out.println(DIVIDER);
+        ui.showGoodbye();
     }
 
     /**
@@ -249,27 +228,27 @@ public class Minty {
      * @param command complete {@code on} command
      * @param commandType recognized command type
      * @param tasks current task list
+     * @param ui command-line interface used to display matching tasks
      * @throws MintyException if the requested date is missing or invalid
      */
     private static void printTasksOnDate(String command, CommandType commandType,
-            ArrayList<Task> tasks) throws MintyException {
+            ArrayList<Task> tasks, Ui ui) throws MintyException {
         String dateText = getCommandArguments(command, commandType);
         if (dateText.isEmpty()) {
             throw new MintyException("Please provide a date after on.");
         }
         LocalDate date = parseDate(dateText, "requested");
-        System.out.println(INDENT + "Here are the tasks occurring on "
-                + date.format(DISPLAY_DATE_FORMAT) + ":");
+        ui.showMessage("Here are the tasks occurring on " + date.format(DISPLAY_DATE_FORMAT) + ":");
 
         int matchCount = 0;
         for (Task task : tasks) {
             if (task.occursOn(date)) {
                 matchCount++;
-                System.out.println(INDENT + matchCount + "." + task);
+                ui.showNumberedTask(matchCount, task);
             }
         }
         if (matchCount == 0) {
-            System.out.println(INDENT + "There are no deadlines or events on this date.");
+            ui.showMessage("There are no deadlines or events on this date.");
         }
     }
 
@@ -278,11 +257,11 @@ public class Minty {
      *
      * @param task task that was added
      * @param taskCount current number of stored tasks
+     * @param ui command-line interface used to show the confirmation
      */
-    private static void printTaskAdded(Task task, int taskCount) {
-        System.out.println(INDENT + "Got it. I've added this task:");
-        System.out.println(INDENT + INDENT + task);
-        printTaskCount(taskCount);
+    private static void printTaskAdded(Task task, int taskCount, Ui ui) {
+        ui.showTask("Got it. I've added this task:", task);
+        ui.showTaskCount(taskCount);
     }
 
     /**
@@ -290,21 +269,11 @@ public class Minty {
      *
      * @param task task that was deleted
      * @param taskCount number of tasks remaining
+     * @param ui command-line interface used to show the confirmation
      */
-    private static void printTaskDeleted(Task task, int taskCount) {
-        System.out.println(INDENT + "Noted. I've removed this task:");
-        System.out.println(INDENT + INDENT + task);
-        printTaskCount(taskCount);
-    }
-
-    /**
-     * Prints the current task count using the correct singular or plural noun.
-     *
-     * @param taskCount current number of stored tasks
-     */
-    private static void printTaskCount(int taskCount) {
-        String taskNoun = taskCount == 1 ? "task" : "tasks";
-        System.out.println(INDENT + "Now you have " + taskCount + " " + taskNoun + " in the list.");
+    private static void printTaskDeleted(Task task, int taskCount, Ui ui) {
+        ui.showTask("Noted. I've removed this task:", task);
+        ui.showTaskCount(taskCount);
     }
 
     /**
@@ -312,12 +281,13 @@ public class Minty {
      *
      * @param storage destination for the task data
      * @param tasks current task list
+     * @param ui command-line interface used to report a save error
      */
-    private static void saveTasks(Storage storage, ArrayList<Task> tasks) {
+    private static void saveTasks(Storage storage, ArrayList<Task> tasks, Ui ui) {
         try {
             storage.saveTasks(tasks);
         } catch (IOException exception) {
-            System.out.println(INDENT + "I couldn't save the tasks: " + exception.getMessage());
+            ui.showError("I couldn't save the tasks: " + exception.getMessage());
         }
     }
 
@@ -325,13 +295,14 @@ public class Minty {
      * Loads the saved task list, or starts with an empty list if reading fails.
      *
      * @param storage source of saved task data
+     * @param ui command-line interface used to report a loading error
      * @return saved tasks, or an empty list when the file cannot be read
      */
-    private static ArrayList<Task> loadTasks(Storage storage) {
+    private static ArrayList<Task> loadTasks(Storage storage, Ui ui) {
         try {
             return storage.loadTasks();
         } catch (IOException | MintyException exception) {
-            System.out.println(INDENT + "I couldn't load the tasks: " + exception.getMessage());
+            ui.showError("I couldn't load the tasks: " + exception.getMessage());
             return new ArrayList<>();
         }
     }
