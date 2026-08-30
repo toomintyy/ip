@@ -1,8 +1,10 @@
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -11,6 +13,8 @@ import java.util.Scanner;
 public class Minty {
     private static final String DIVIDER = "____________________________________________________________";
     private static final String INDENT = "  ";
+    private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
     private static final String BANNER =
               "███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗\n"
             + "████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝\n"
@@ -51,6 +55,9 @@ public class Minty {
                     for (int i = 0; i < tasks.size(); i++) {
                         System.out.println(INDENT + (i + 1) + "." + tasks.get(i));
                     }
+                    break;
+                case ON:
+                    printTasksOnDate(command, commandType, tasks);
                     break;
                 case MARK:
                     int taskIndex = parseTaskIndex(command, commandType, tasks.size());
@@ -233,6 +240,36 @@ public class Minty {
             return LocalDate.parse(dateText);
         } catch (DateTimeParseException exception) {
             throw new MintyException("Please use yyyy-MM-dd for the " + dateName + " date.");
+        }
+    }
+
+    /**
+     * Prints dated tasks that occur on a requested date.
+     *
+     * @param command complete {@code on} command
+     * @param commandType recognized command type
+     * @param tasks current task list
+     * @throws MintyException if the requested date is missing or invalid
+     */
+    private static void printTasksOnDate(String command, CommandType commandType,
+            ArrayList<Task> tasks) throws MintyException {
+        String dateText = getCommandArguments(command, commandType);
+        if (dateText.isEmpty()) {
+            throw new MintyException("Please provide a date after on.");
+        }
+        LocalDate date = parseDate(dateText, "requested");
+        System.out.println(INDENT + "Here are the tasks occurring on "
+                + date.format(DISPLAY_DATE_FORMAT) + ":");
+
+        int matchCount = 0;
+        for (Task task : tasks) {
+            if (task.occursOn(date)) {
+                matchCount++;
+                System.out.println(INDENT + matchCount + "." + task);
+            }
+        }
+        if (matchCount == 0) {
+            System.out.println(INDENT + "There are no deadlines or events on this date.");
         }
     }
 

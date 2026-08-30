@@ -1,4 +1,4 @@
-# Minty Level 8 Minimal UI Test Plan
+# Minty Level 8 UI Test Plan
 
 These tests run with Java 25. Each test starts a fresh instance of Minty and compares the complete console output exactly.
 
@@ -25,7 +25,8 @@ These tests run with Java 25. Each test starts a fresh instance of Minty and com
 | Unsupported saved escape sequence | — | TC17 |
 | Parse and format ISO dates | TC1, TC5, TC10 | TC18 |
 | Invalid dates in saved data | — | TC19, TC20 |
-| Startup and `bye` | TC1–TC20 | — |
+| `on` date query | TC21 | TC21 |
+| Startup and `bye` | TC1–TC21 | — |
 
 The use of `ArrayList<Task>` is an implementation detail and is verified by code review rather than console output. The UI tests verify its observable add, lookup, renumbering, and deletion behavior.
 
@@ -930,6 +931,68 @@ ____________________________________________________________
 ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
   Heyyy! I'm Feeling Minty.
   What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC21: Find tasks occurring on a date
+
+Aim: Verify that `on` finds deadlines due on the requested date and events across inclusive date ranges, excludes todos, reports no matches, and validates missing or invalid dates.
+
+### Input
+
+```text
+on 2019-10-15
+on 2019-10-14
+on 2019-10-16
+on 2019-10-17
+on 2019-10-18
+on
+on 2019-02-29
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Here are the tasks occurring on Oct 15 2019:
+  1.[D][ ] due task (by: Oct 15 2019)
+  2.[E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
+____________________________________________________________
+____________________________________________________________
+  Here are the tasks occurring on Oct 14 2019:
+  1.[E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
+____________________________________________________________
+____________________________________________________________
+  Here are the tasks occurring on Oct 16 2019:
+  1.[E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
+____________________________________________________________
+____________________________________________________________
+  Here are the tasks occurring on Oct 17 2019:
+  1.[D][X] later task (by: Oct 17 2019)
+____________________________________________________________
+____________________________________________________________
+  Here are the tasks occurring on Oct 18 2019:
+  There are no deadlines or events on this date.
+____________________________________________________________
+____________________________________________________________
+  Please provide a date after on.
+____________________________________________________________
+____________________________________________________________
+  Please use yyyy-MM-dd for the requested date.
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!
