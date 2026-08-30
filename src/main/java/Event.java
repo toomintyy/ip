@@ -1,18 +1,25 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 /**
- * Represents a task that takes place between a start and an end date or time.
+ * Represents a task that takes place between a start and an end date.
  */
 public class Event extends Task {
-    private final String from;
-    private final String to;
+    private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
+
+    private final LocalDate from;
+    private final LocalDate to;
 
     /**
      * Creates an incomplete event.
      *
      * @param description description of the event
-     * @param from date or time at which the event starts
-     * @param to date or time at which the event ends
+     * @param from date on which the event starts
+     * @param to date on which the event ends
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, LocalDate from, LocalDate to) {
         super(description);
         this.from = from;
         this.to = to;
@@ -26,12 +33,17 @@ public class Event extends Task {
     @Override
     public String toDataString() {
         return "E | " + (isDone ? "1" : "0") + " | "
-                + escapeDataField(description) + " | " + escapeDataField(from)
-                + " | " + escapeDataField(to);
+                + escapeDataField(description) + " | " + from + " | " + to;
+    }
+
+    @Override
+    public boolean occursOn(LocalDate date) {
+        return !date.isBefore(from) && !date.isAfter(to);
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+        return "[E]" + super.toString() + " (from: " + from.format(DISPLAY_DATE_FORMAT)
+                + " to: " + to.format(DISPLAY_DATE_FORMAT) + ")";
     }
 }

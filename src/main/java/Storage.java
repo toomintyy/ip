@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 /**
@@ -111,10 +113,15 @@ public class Storage {
             task = new Todo(fields.get(2));
             break;
         case "D":
-            task = new Deadline(fields.get(2), fields.get(3));
+            task = new Deadline(fields.get(2), parseDate(fields.get(3), lineNumber));
             break;
         case "E":
-            task = new Event(fields.get(2), fields.get(3), fields.get(4));
+            LocalDate from = parseDate(fields.get(3), lineNumber);
+            LocalDate to = parseDate(fields.get(4), lineNumber);
+            if (to.isBefore(from)) {
+                throw invalidLine(lineNumber, "event end date is before its start date");
+            }
+            task = new Event(fields.get(2), from, to);
             break;
         default:
             throw new AssertionError("Task type was already validated");
@@ -123,6 +130,22 @@ public class Storage {
             task.markAsDone();
         }
         return task;
+    }
+
+    /**
+     * Parses a saved date in ISO format.
+     *
+     * @param dateText saved date text
+     * @param lineNumber one-based line number used in error messages
+     * @return parsed date
+     * @throws MintyException if the saved date is invalid
+     */
+    private LocalDate parseDate(String dateText, int lineNumber) throws MintyException {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException exception) {
+            throw invalidLine(lineNumber, "date must use yyyy-MM-dd");
+        }
     }
 
     /**
