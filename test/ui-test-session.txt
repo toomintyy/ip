@@ -2,8 +2,8 @@
 Aim: Verify that todos, deadlines, and events are created with the correct details, retain their types when marked, and appear correctly in the task list.
 --- Console input ---
 todo borrow book
-deadline do homework /by no idea :-p
-event project meeting /from Mon 2pm /to 4pm
+deadline do homework /by 2019-12-02
+event project meeting /from 2019-12-03 /to 2019-12-04
 mark 2
 list
 bye
@@ -25,23 +25,23 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [D][ ] do homework (by: no idea :-p)
+    [D][ ] do homework (by: Dec 02 2019)
   Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [E][ ] project meeting (from: Mon 2pm to: 4pm)
+    [E][ ] project meeting (from: Dec 03 2019 to: Dec 04 2019)
   Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
   Nice! I've marked this task as done:
-    [D][X] do homework (by: no idea :-p)
+    [D][X] do homework (by: Dec 02 2019)
 ____________________________________________________________
 ____________________________________________________________
   Here are the tasks in your list:
   1.[T][ ] borrow book
-  2.[D][X] do homework (by: no idea :-p)
-  3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+  2.[D][X] do homework (by: Dec 02 2019)
+  3.[E][ ] project meeting (from: Dec 03 2019 to: Dec 04 2019)
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!
@@ -51,8 +51,8 @@ ____________________________________________________________
 Aim: Verify that deleting a completed middle task preserves its status in the confirmation, shifts later tasks to new indices, and can reduce the list to zero tasks.
 --- Console input ---
 todo first
-deadline second /by Friday
-event third /from Monday /to Tuesday
+deadline second /by 2019-12-06
+event third /from 2019-12-09 /to 2019-12-10
 mark 2
 delete 2
 mark 2
@@ -79,31 +79,31 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [D][ ] second (by: Friday)
+    [D][ ] second (by: Dec 06 2019)
   Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [E][ ] third (from: Monday to: Tuesday)
+    [E][ ] third (from: Dec 09 2019 to: Dec 10 2019)
   Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
   Nice! I've marked this task as done:
-    [D][X] second (by: Friday)
+    [D][X] second (by: Dec 06 2019)
 ____________________________________________________________
 ____________________________________________________________
   Noted. I've removed this task:
-    [D][X] second (by: Friday)
+    [D][X] second (by: Dec 06 2019)
   Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
   Nice! I've marked this task as done:
-    [E][X] third (from: Monday to: Tuesday)
+    [E][X] third (from: Dec 09 2019 to: Dec 10 2019)
 ____________________________________________________________
 ____________________________________________________________
   Here are the tasks in your list:
   1.[T][ ] first
-  2.[E][X] third (from: Monday to: Tuesday)
+  2.[E][X] third (from: Dec 09 2019 to: Dec 10 2019)
 ____________________________________________________________
 ____________________________________________________________
   Noted. I've removed this task:
@@ -112,7 +112,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Noted. I've removed this task:
-    [E][X] third (from: Monday to: Tuesday)
+    [E][X] third (from: Dec 09 2019 to: Dec 10 2019)
   Now you have 0 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -192,11 +192,11 @@ ____________________________________________________________
   Bye. Hope to see you again soon!
 ____________________________________________________________
 
-=== TC5: Preserve multi-word date and time strings ===
-Aim: Verify that deadline and event date/time values are treated as unchanged strings, including date ranges and spaces.
+=== TC5: Parse and format ISO dates ===
+Aim: Verify that deadline and event dates entered as `yyyy-MM-dd` are stored as dates and displayed as `MMM dd yyyy`.
 --- Console input ---
-deadline submit report /by 11/10/2019 5pm
-event orientation week /from 4/10/2019 /to 11/10/2019
+deadline submit report /by 2019-10-15
+event orientation week /from 2019-10-04 /to 2019-10-11
 list
 bye
 --- Console output ---
@@ -212,18 +212,18 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [D][ ] submit report (by: 11/10/2019 5pm)
+    [D][ ] submit report (by: Oct 15 2019)
   Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [E][ ] orientation week (from: 4/10/2019 to: 11/10/2019)
+    [E][ ] orientation week (from: Oct 04 2019 to: Oct 11 2019)
   Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
   Here are the tasks in your list:
-  1.[D][ ] submit report (by: 11/10/2019 5pm)
-  2.[E][ ] orientation week (from: 4/10/2019 to: 11/10/2019)
+  1.[D][ ] submit report (by: Oct 15 2019)
+  2.[E][ ] orientation week (from: Oct 04 2019 to: Oct 11 2019)
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!
@@ -233,9 +233,9 @@ ____________________________________________________________
 Aim: Verify each missing deadline component produces the correct error, does not add a task, and does not prevent a later valid deadline from being stored.
 --- Console input ---
 deadline
-deadline /by Friday
+deadline /by 2019-12-06
 deadline submit report /by
-deadline valid report /by Monday 5pm
+deadline valid report /by 2019-12-09
 list
 bye
 --- Console output ---
@@ -260,12 +260,12 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [D][ ] valid report (by: Monday 5pm)
+    [D][ ] valid report (by: Dec 09 2019)
   Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
   Here are the tasks in your list:
-  1.[D][ ] valid report (by: Monday 5pm)
+  1.[D][ ] valid report (by: Dec 09 2019)
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!
@@ -277,10 +277,10 @@ Aim: Verify every malformed event arrangement produces the correct error, does n
 event
 event meeting /to 4pm /from 2pm
 event meeting /from 2pm
-event /from 2pm /to 4pm
+event /from 2019-12-09 /to 2019-12-10
 event meeting /from /to 4pm
 event meeting /from 2pm /to
-event valid meeting /from Monday /to Tuesday
+event valid meeting /from 2019-12-09 /to 2019-12-10
 list
 bye
 --- Console output ---
@@ -314,12 +314,12 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [E][ ] valid meeting (from: Monday to: Tuesday)
+    [E][ ] valid meeting (from: Dec 09 2019 to: Dec 10 2019)
   Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
   Here are the tasks in your list:
-  1.[E][ ] valid meeting (from: Monday to: Tuesday)
+  1.[E][ ] valid meeting (from: Dec 09 2019 to: Dec 10 2019)
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!
@@ -339,8 +339,8 @@ mark 2147483648
 unmark
 unmark bananas
 unmark 2
-deadline report /by no idea :-p
-event trip /from day one /to day two
+deadline report /by 2019-11-01
+event trip /from 2019-11-02 /to 2019-11-03
 list
 bye
 --- Console output ---
@@ -393,19 +393,19 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [D][ ] report (by: no idea :-p)
+    [D][ ] report (by: Nov 01 2019)
   Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [E][ ] trip (from: day one to: day two)
+    [E][ ] trip (from: Nov 02 2019 to: Nov 03 2019)
   Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
   Here are the tasks in your list:
   1.[T][ ] trimmed task
-  2.[D][ ] report (by: no idea :-p)
-  3.[E][ ] trip (from: day one to: day two)
+  2.[D][ ] report (by: Nov 01 2019)
+  3.[E][ ] trip (from: Nov 02 2019 to: Nov 03 2019)
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!
@@ -415,8 +415,8 @@ ____________________________________________________________
 Aim: Verify that Minty starts without an existing data file or folder, creates both automatically, and writes after each successful add, mark, delete, and unmark operation.
 --- Console input ---
 todo read book
-deadline return book /by June 6th
-event project meeting /from Aug 6th 2pm /to 4pm
+deadline return book /by 2019-06-06
+event project meeting /from 2019-08-06 /to 2019-08-07
 mark 1
 delete 2
 unmark 1
@@ -439,12 +439,12 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [D][ ] return book (by: June 6th)
+    [D][ ] return book (by: Jun 06 2019)
   Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
   Got it. I've added this task:
-    [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+    [E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
   Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -453,7 +453,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Noted. I've removed this task:
-    [D][ ] return book (by: June 6th)
+    [D][ ] return book (by: Jun 06 2019)
   Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -483,8 +483,8 @@ ____________________________________________________________
 ____________________________________________________________
   Here are the tasks in your list:
   1.[T][X] read book
-  2.[D][ ] return book (by: June 6th)
-  3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+  2.[D][ ] return book (by: Jun 06 2019)
+  3.[E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!
@@ -509,7 +509,7 @@ ____________________________________________________________
 ____________________________________________________________
   Here are the tasks in your list:
   1.[T][X] compare | alternatives
-  2.[D][ ] use C:\temp (by: Friday | Saturday)
+  2.[D][ ] use C:\temp (by: Dec 06 2019)
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!
@@ -621,6 +621,96 @@ Aim: Verify that an escape character before an unsupported character produces a 
 bye
 --- Console output ---
   I couldn't load the tasks: Invalid data on line 1: unsupported escape sequence '\q'.
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+
+=== TC18: Reject invalid dates and reversed event ranges ===
+Aim: Verify that malformed and impossible ISO dates and an event ending before it starts are rejected without preventing a later valid leap-day deadline.
+--- Console input ---
+deadline impossible /by 2019-02-29
+deadline wrong format /by 15-10-2019
+event impossible /from 2019-02-29 /to 2019-03-01
+event reversed /from 2019-03-02 /to 2019-03-01
+event invalid end /from 2019-03-01 /to tomorrow
+deadline leap day /by 2020-02-29
+list
+bye
+--- Console output ---
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Please use yyyy-MM-dd for the deadline date.
+____________________________________________________________
+____________________________________________________________
+  Please use yyyy-MM-dd for the deadline date.
+____________________________________________________________
+____________________________________________________________
+  Please use yyyy-MM-dd for the event start date.
+____________________________________________________________
+____________________________________________________________
+  The event end date cannot be before its start date.
+____________________________________________________________
+____________________________________________________________
+  Please use yyyy-MM-dd for the event end date.
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [D][ ] leap day (by: Feb 29 2020)
+  Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+  Here are the tasks in your list:
+  1.[D][ ] leap day (by: Feb 29 2020)
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+
+=== TC19: Reject an invalid saved date ===
+Aim: Verify that an impossible date in saved deadline data produces a line-specific error and starts Minty safely.
+--- Console input ---
+bye
+--- Console output ---
+  I couldn't load the tasks: Invalid data on line 1: date must use yyyy-MM-dd.
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+
+=== TC20: Reject a reversed saved event range ===
+Aim: Verify that a saved event ending before it starts produces a line-specific error and starts Minty safely.
+--- Console input ---
+bye
+--- Console output ---
+  I couldn't load the tasks: Invalid data on line 1: event end date is before its start date.
 ____________________________________________________________
 ███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
 ████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝

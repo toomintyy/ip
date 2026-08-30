@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -165,13 +167,14 @@ public class Minty {
         }
 
         String description = details.substring(0, bySeparator).trim();
-        String by = details.substring(bySeparator + "/by".length()).trim();
+        String byText = details.substring(bySeparator + "/by".length()).trim();
         if (description.isEmpty()) {
             throw new MintyException("Hmm, a deadline needs a description.");
         }
-        if (by.isEmpty()) {
+        if (byText.isEmpty()) {
             throw new MintyException("Please say when the deadline is due after /by.");
         }
+        LocalDate by = parseDate(byText, "deadline");
         return new Deadline(description, by);
     }
 
@@ -198,18 +201,39 @@ public class Minty {
         }
 
         String description = details.substring(0, fromSeparator).trim();
-        String from = details.substring(fromSeparator + "/from".length(), toSeparator).trim();
-        String to = details.substring(toSeparator + "/to".length()).trim();
+        String fromText = details.substring(fromSeparator + "/from".length(), toSeparator).trim();
+        String toText = details.substring(toSeparator + "/to".length()).trim();
         if (description.isEmpty()) {
             throw new MintyException("Hmm, an event needs a description.");
         }
-        if (from.isEmpty()) {
+        if (fromText.isEmpty()) {
             throw new MintyException("Please say when the event starts after /from.");
         }
-        if (to.isEmpty()) {
+        if (toText.isEmpty()) {
             throw new MintyException("Please say when the event ends after /to.");
         }
+        LocalDate from = parseDate(fromText, "event start");
+        LocalDate to = parseDate(toText, "event end");
+        if (to.isBefore(from)) {
+            throw new MintyException("The event end date cannot be before its start date.");
+        }
         return new Event(description, from, to);
+    }
+
+    /**
+     * Parses a date in Minty's required ISO format.
+     *
+     * @param dateText date entered by the user
+     * @param dateName name used to identify the date in an error message
+     * @return parsed date
+     * @throws MintyException if the date is not a valid {@code yyyy-MM-dd} value
+     */
+    private static LocalDate parseDate(String dateText, String dateName) throws MintyException {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException exception) {
+            throw new MintyException("Please use yyyy-MM-dd for the " + dateName + " date.");
+        }
     }
 
     /**
