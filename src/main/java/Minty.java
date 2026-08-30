@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -24,7 +25,7 @@ public class Minty {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Storage storage = new Storage("data/minty.txt");
+        Storage storage = new Storage(Path.of("data", "minty.txt"));
         ArrayList<Task> tasks = loadTasks(storage);
 
         System.out.println(DIVIDER);
@@ -268,7 +269,7 @@ public class Minty {
     private static ArrayList<Task> loadTasks(Storage storage) {
         try {
             return storage.loadTasks();
-        } catch (IOException exception) {
+        } catch (IOException | MintyException exception) {
             System.out.println(INDENT + "I couldn't load the tasks: " + exception.getMessage());
             return new ArrayList<>();
         }

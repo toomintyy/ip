@@ -44,7 +44,17 @@ public class Task {
      * @return serialized task
      */
     public String toDataString() {
-        return "T | " + (isDone ? "1" : "0") + " | " + description;
+        return "T | " + (isDone ? "1" : "0") + " | " + escapeDataField(description);
+    }
+
+    /**
+     * Escapes characters that have special meaning in the save-file format.
+     *
+     * @param value task field to escape
+     * @return escaped field
+     */
+    protected static String escapeDataField(String value) {
+        return value.replace("\\", "\\\\").replace("|", "\\|");
     }
 
     /**

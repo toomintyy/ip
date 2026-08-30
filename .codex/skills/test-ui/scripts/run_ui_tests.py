@@ -53,6 +53,10 @@ def main() -> int:
 
     for case in cases:
         DATA_FILE.unlink(missing_ok=True)
+        try:
+            DATA_FILE.parent.rmdir()
+        except OSError:
+            pass
         fixture = FIXTURES / f"{case['id']}.txt"
         if fixture.exists():
             DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
