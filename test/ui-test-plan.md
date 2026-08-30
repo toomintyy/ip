@@ -6,15 +6,16 @@ These tests run with Java 25. Each test starts a fresh instance of Minty and com
 
 | Behavior | Happy path | Error and boundary coverage |
 | --- | --- | --- |
-| `todo` | TC1, TC8, TC9 | TC4 |
-| `deadline` | TC1, TC5, TC6, TC9 | TC6 |
-| `event` | TC1, TC5, TC7, TC9 | TC7 |
-| `list` | TC1, TC2, TC3, TC5–TC8 | TC3 checks an empty list |
+| `todo` | TC1, TC8–TC10 | TC4 |
+| `deadline` | TC1, TC5, TC6, TC9, TC10 | TC6 |
+| `event` | TC1, TC5, TC7, TC9, TC10 | TC7 |
+| `list` | TC1, TC2, TC3, TC5–TC8, TC10 | TC3 checks an empty list |
 | `mark` and `unmark` | TC1, TC2, TC8, TC9 | TC8 |
 | `delete` | TC2, TC9 | TC3 |
 | Unknown or empty command | — | TC4 |
 | Save after task-list changes | TC9 | — |
-| Startup and `bye` | TC1–TC9 | — |
+| Load task types and statuses | TC10 | — |
+| Startup and `bye` | TC1–TC10 | — |
 
 The use of `ArrayList<Task>` is an implementation detail and is verified by code review rather than console output. The UI tests verify its observable add, lookup, renumbering, and deletion behavior.
 
@@ -559,6 +560,41 @@ ____________________________________________________________
 ____________________________________________________________
   OK, I've marked this task as not done yet:
     [T][ ] read book
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC10: Load saved task types and statuses
+
+Aim: Verify that Minty loads the Todo, Deadline, and Event in `test/data/TC10.txt`, including a completed task, before processing the first command.
+
+### Input
+
+```text
+list
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Here are the tasks in your list:
+  1.[T][X] read book
+  2.[D][ ] return book (by: June 6th)
+  3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!

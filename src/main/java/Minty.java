@@ -24,8 +24,8 @@ public class Minty {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
         Storage storage = new Storage("data/minty.txt");
+        ArrayList<Task> tasks = loadTasks(storage);
 
         System.out.println(DIVIDER);
         System.out.print(BANNER);
@@ -256,6 +256,21 @@ public class Minty {
             storage.saveTasks(tasks);
         } catch (IOException exception) {
             System.out.println(INDENT + "I couldn't save the tasks: " + exception.getMessage());
+        }
+    }
+
+    /**
+     * Loads the saved task list, or starts with an empty list if reading fails.
+     *
+     * @param storage source of saved task data
+     * @return saved tasks, or an empty list when the file cannot be read
+     */
+    private static ArrayList<Task> loadTasks(Storage storage) {
+        try {
+            return storage.loadTasks();
+        } catch (IOException exception) {
+            System.out.println(INDENT + "I couldn't load the tasks: " + exception.getMessage());
+            return new ArrayList<>();
         }
     }
 }
