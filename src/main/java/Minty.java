@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -21,7 +20,7 @@ public class Minty {
     public static void main(String[] args) {
         Ui ui = new Ui();
         Storage storage = new Storage(Path.of("data", "minty.txt"));
-        ArrayList<Task> tasks = loadTasks(storage, ui);
+        TaskList tasks = loadTasks(storage, ui);
 
         ui.showWelcome();
 
@@ -43,19 +42,19 @@ public class Minty {
                     break;
                 case MARK:
                     int taskIndex = Parser.parseTaskIndex(command, commandType, tasks.size());
-                    tasks.get(taskIndex).markAsDone();
+                    Task markedTask = tasks.mark(taskIndex);
                     saveTasks(storage, tasks, ui);
-                    ui.showTask("Nice! I've marked this task as done:", tasks.get(taskIndex));
+                    ui.showTask("Nice! I've marked this task as done:", markedTask);
                     break;
                 case UNMARK:
                     taskIndex = Parser.parseTaskIndex(command, commandType, tasks.size());
-                    tasks.get(taskIndex).markAsNotDone();
+                    Task unmarkedTask = tasks.unmark(taskIndex);
                     saveTasks(storage, tasks, ui);
-                    ui.showTask("OK, I've marked this task as not done yet:", tasks.get(taskIndex));
+                    ui.showTask("OK, I've marked this task as not done yet:", unmarkedTask);
                     break;
                 case DELETE:
                     taskIndex = Parser.parseTaskIndex(command, commandType, tasks.size());
-                    Task deletedTask = tasks.remove(taskIndex);
+                    Task deletedTask = tasks.delete(taskIndex);
                     saveTasks(storage, tasks, ui);
                     printTaskDeleted(deletedTask, tasks.size(), ui);
                     break;
@@ -100,17 +99,15 @@ public class Minty {
      * @param ui command-line interface used to display matching tasks
      * @throws MintyException if the requested date is missing or invalid
      */
-    private static void printTasksOnDate(String command, ArrayList<Task> tasks, Ui ui)
+    private static void printTasksOnDate(String command, TaskList tasks, Ui ui)
             throws MintyException {
         LocalDate date = Parser.parseOnDate(command);
         ui.showMessage("Here are the tasks occurring on " + date.format(DISPLAY_DATE_FORMAT) + ":");
 
         int matchCount = 0;
-        for (Task task : tasks) {
-            if (task.occursOn(date)) {
-                matchCount++;
-                ui.showNumberedTask(matchCount, task);
-            }
+        for (Task task : tasks.findOn(date)) {
+            matchCount++;
+            ui.showNumberedTask(matchCount, task);
         }
         if (matchCount == 0) {
             ui.showMessage("There are no deadlines or events on this date.");
@@ -148,7 +145,7 @@ public class Minty {
      * @param tasks current task list
      * @param ui command-line interface used to report a save error
      */
-    private static void saveTasks(Storage storage, ArrayList<Task> tasks, Ui ui) {
+    private static void saveTasks(Storage storage, TaskList tasks, Ui ui) {
         try {
             storage.saveTasks(tasks);
         } catch (IOException exception) {
@@ -163,12 +160,12 @@ public class Minty {
      * @param ui command-line interface used to report a loading error
      * @return saved tasks, or an empty list when the file cannot be read
      */
-    private static ArrayList<Task> loadTasks(Storage storage, Ui ui) {
+    private static TaskList loadTasks(Storage storage, Ui ui) {
         try {
-            return storage.loadTasks();
+            return new TaskList(storage.loadTasks());
         } catch (IOException | MintyException exception) {
             ui.showError("I couldn't load the tasks: " + exception.getMessage());
-            return new ArrayList<>();
+            return new TaskList();
         }
     }
 }
