@@ -1,0 +1,46 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
+/**
+ * Displays dated tasks occurring on a requested date.
+ */
+public class OnCommand extends Command {
+    private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
+
+    private final String fullCommand;
+
+    /**
+     * Creates a date-query command from the user's complete input.
+     *
+     * @param fullCommand complete {@code on} command
+     */
+    public OnCommand(String fullCommand) {
+        this.fullCommand = fullCommand;
+    }
+
+    /**
+     * Parses the requested date and displays every matching deadline and event.
+     *
+     * @param tasks task list to search
+     * @param ui command-line interface used for the response
+     * @param storage task storage, which is not used
+     * @throws MintyException if the date is missing or invalid
+     */
+    @Override
+    public void execute(TaskList tasks, Ui ui, Storage storage) throws MintyException {
+        LocalDate date = Parser.parseOnDate(fullCommand);
+        ui.showMessage("Here are the tasks occurring on "
+                + date.format(DISPLAY_DATE_FORMAT) + ":");
+
+        int matchCount = 0;
+        for (Task task : tasks.findOn(date)) {
+            matchCount++;
+            ui.showNumberedTask(matchCount, task);
+        }
+        if (matchCount == 0) {
+            ui.showMessage("There are no deadlines or events on this date.");
+        }
+    }
+}

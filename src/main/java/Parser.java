@@ -13,6 +13,26 @@ public final class Parser {
     }
 
     /**
+     * Converts complete user input into an executable command object.
+     *
+     * @param fullCommand complete command entered by the user
+     * @return command ready to execute
+     */
+    public static Command parse(String fullCommand) {
+        CommandType commandType = parseCommandType(fullCommand);
+        switch (commandType) {
+        case BYE:
+            return new ExitCommand();
+        case LIST:
+            return new ListCommand();
+        case ON:
+            return new OnCommand(fullCommand);
+        default:
+            return new LegacyCommand(fullCommand, commandType);
+        }
+    }
+
+    /**
      * Identifies the type of a complete command.
      *
      * @param command complete command entered by the user
