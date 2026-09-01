@@ -52,7 +52,7 @@ public class Storage {
      * @param tasks tasks to save
      * @throws IOException if the data directory or file cannot be written
      */
-    public void saveTasks(ArrayList<Task> tasks) throws IOException {
+    public void saveTasks(Iterable<Task> tasks) throws IOException {
         Path parentDirectory = filePath.getParent();
         if (parentDirectory != null) {
             Files.createDirectories(parentDirectory);
