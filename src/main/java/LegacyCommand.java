@@ -49,33 +49,9 @@ public class LegacyCommand extends Command {
             ui.showTask("Noted. I've removed this task:", deletedTask);
             ui.showTaskCount(tasks.size());
             break;
-        case TODO:
-            addTask(Parser.parseTodo(fullCommand), tasks, ui, storage);
-            break;
-        case DEADLINE:
-            addTask(Parser.parseDeadline(fullCommand), tasks, ui, storage);
-            break;
-        case EVENT:
-            addTask(Parser.parseEvent(fullCommand), tasks, ui, storage);
-            break;
         case UNKNOWN:
         default:
             throw new MintyException("Sorry, I don't understand that command.");
         }
-    }
-
-    /**
-     * Adds, saves, and displays a newly parsed task.
-     *
-     * @param task task to add
-     * @param tasks task list to update
-     * @param ui command-line interface used for the response
-     * @param storage destination for updated task data
-     */
-    private void addTask(Task task, TaskList tasks, Ui ui, Storage storage) {
-        tasks.add(task);
-        saveTasks(tasks, ui, storage);
-        ui.showTask("Got it. I've added this task:", task);
-        ui.showTaskCount(tasks.size());
     }
 }

@@ -27,6 +27,12 @@ public final class Parser {
             return new ListCommand();
         case ON:
             return new OnCommand(fullCommand);
+        case TODO:
+            return new TodoCommand(fullCommand);
+        case DEADLINE:
+            return new DeadlineCommand(fullCommand);
+        case EVENT:
+            return new EventCommand(fullCommand);
         default:
             return new LegacyCommand(fullCommand, commandType);
         }
