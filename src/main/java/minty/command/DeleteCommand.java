@@ -1,3 +1,9 @@
+package minty.command;
+
+import minty.task.Task;
+import minty.task.TaskList;
+import minty.ui.Ui;
+
 /**
  * Deletes one task from Minty's task list.
  */

@@ -1,3 +1,5 @@
+package minty.command;
+
 /**
  * Represents a command that Minty can recognize from user input.
  */

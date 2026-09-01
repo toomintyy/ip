@@ -1,3 +1,8 @@
+package minty.command;
+
+import minty.task.Task;
+import minty.task.TaskList;
+
 /**
  * Marks one task as not completed.
  */

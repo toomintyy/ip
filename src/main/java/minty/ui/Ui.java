@@ -1,4 +1,8 @@
+package minty.ui;
+
 import java.util.Scanner;
+
+import minty.task.Task;
 
 /**
  * Handles Minty's command-line input and output.

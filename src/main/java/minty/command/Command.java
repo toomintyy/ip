@@ -1,4 +1,11 @@
+package minty.command;
+
 import java.io.IOException;
+
+import minty.exception.MintyException;
+import minty.storage.Storage;
+import minty.task.TaskList;
+import minty.ui.Ui;
 
 /**
  * Represents an executable command understood by Minty.

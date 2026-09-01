@@ -1,3 +1,8 @@
+package minty.command;
+
+import minty.exception.MintyException;
+import minty.task.Task;
+
 /**
  * Adds a deadline to Minty's task list.
  */

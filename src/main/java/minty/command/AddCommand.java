@@ -1,3 +1,11 @@
+package minty.command;
+
+import minty.exception.MintyException;
+import minty.storage.Storage;
+import minty.task.Task;
+import minty.task.TaskList;
+import minty.ui.Ui;
+
 /**
  * Adds one parsed task, persists the updated list, and confirms the change.
  */

@@ -1,3 +1,9 @@
+package minty.command;
+
+import minty.storage.Storage;
+import minty.task.TaskList;
+import minty.ui.Ui;
+
 /**
  * Tells Minty to end the current command loop.
  */
