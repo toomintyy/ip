@@ -1,4 +1,9 @@
-package minty;
+package minty.command;
+
+import minty.exception.MintyException;
+import minty.storage.Storage;
+import minty.task.TaskList;
+import minty.ui.Ui;
 
 /**
  * Represents input that does not match any command Minty understands.

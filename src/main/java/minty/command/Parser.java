@@ -1,7 +1,12 @@
-package minty;
+package minty.command;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+
+import minty.exception.MintyException;
+import minty.task.Deadline;
+import minty.task.Event;
+import minty.task.Todo;
 
 /**
  * Interprets and validates commands entered by the user.

@@ -1,4 +1,4 @@
-package minty;
+package minty.task;
 
 import java.time.LocalDate;
 

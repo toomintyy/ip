@@ -1,4 +1,10 @@
-package minty;
+package minty.command;
+
+import minty.exception.MintyException;
+import minty.storage.Storage;
+import minty.task.Task;
+import minty.task.TaskList;
+import minty.ui.Ui;
 
 /**
  * Updates one task selected by its one-based command-line number.

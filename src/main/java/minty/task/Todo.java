@@ -1,4 +1,4 @@
-package minty;
+package minty.task;
 
 /**
  * Represents a task without an attached date or time.

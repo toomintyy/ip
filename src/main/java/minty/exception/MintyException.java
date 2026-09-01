@@ -1,4 +1,4 @@
-package minty;
+package minty.exception;
 
 /**
  * Represents an error caused by an invalid command entered in Minty.

@@ -3,6 +3,13 @@ package minty;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import minty.command.Command;
+import minty.command.Parser;
+import minty.exception.MintyException;
+import minty.storage.Storage;
+import minty.task.TaskList;
+import minty.ui.Ui;
+
 /**
  * Runs Minty, a simple command-line chatbot.
  */

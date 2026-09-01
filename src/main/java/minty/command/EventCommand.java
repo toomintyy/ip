@@ -1,4 +1,7 @@
-package minty;
+package minty.command;
+
+import minty.exception.MintyException;
+import minty.task.Task;
 
 /**
  * Adds an event to Minty's task list.
