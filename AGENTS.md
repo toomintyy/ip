@@ -35,6 +35,12 @@ After every update to application code:
 1. Review `test/ui-test-plan.md` and update it when the changed behavior requires new or revised test cases.
 2. Invoke the project-specific `test-ui` skill to run the documented UI tests and record the test session.
 
+## JUnit testing
+
+Maintain JUnit coverage for approximately the top 50% highest-value methods in the codebase, prioritizing complex, core, and business-critical logic over trivial getters, constructors, or thin delegating methods.
+
+After every code change, review the affected behavior and add or update JUnit tests as needed to continue meeting this coverage target. Run the complete JUnit suite with Gradle to verify that all tests pass.
+
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
