@@ -1,3 +1,5 @@
+package minty;
+
 /**
  * Adds a todo to Minty's task list.
  */

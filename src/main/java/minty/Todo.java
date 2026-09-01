@@ -1,3 +1,5 @@
+package minty;
+
 /**
  * Represents a task without an attached date or time.
  */

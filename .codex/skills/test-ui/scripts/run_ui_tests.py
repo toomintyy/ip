@@ -37,7 +37,7 @@ def parse_cases(plan_text: str) -> list[dict[str, str]]:
 def compile_program() -> None:
     """Compile all production Java sources into an isolated test directory."""
     CLASSES.mkdir(parents=True, exist_ok=True)
-    sources = sorted((ROOT / "src" / "main" / "java").glob("*.java"))
+    sources = sorted((ROOT / "src" / "main" / "java").rglob("*.java"))
     subprocess.run(
         ["javac", "-d", str(CLASSES), *map(str, sources)],
         cwd=ROOT,
@@ -65,7 +65,7 @@ def main() -> int:
         command_input = case["input"]
         expected = case["expected"]
         result = subprocess.run(
-            ["java", "-cp", str(CLASSES), "Minty"],
+            ["java", "-cp", str(CLASSES), "minty.Minty"],
             cwd=ROOT,
             input=command_input,
             text=True,

@@ -1,3 +1,5 @@
+package minty;
+
 /**
  * Adds a deadline to Minty's task list.
  */

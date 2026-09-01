@@ -1,3 +1,5 @@
+package minty;
+
 /**
  * Marks one task as not completed.
  */

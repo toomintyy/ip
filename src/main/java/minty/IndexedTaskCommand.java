@@ -1,3 +1,5 @@
+package minty;
+
 /**
  * Updates one task selected by its one-based command-line number.
  */

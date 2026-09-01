@@ -1,3 +1,5 @@
+package minty;
+
 /**
  * Deletes one task from Minty's task list.
  */

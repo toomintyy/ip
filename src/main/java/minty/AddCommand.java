@@ -1,3 +1,5 @@
+package minty;
+
 /**
  * Adds one parsed task, persists the updated list, and confirms the change.
  */

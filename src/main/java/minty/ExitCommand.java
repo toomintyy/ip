@@ -1,3 +1,5 @@
+package minty;
+
 /**
  * Tells Minty to end the current command loop.
  */

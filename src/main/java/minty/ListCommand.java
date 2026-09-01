@@ -1,3 +1,5 @@
+package minty;
+
 /**
  * Displays every task currently in Minty's task list.
  */

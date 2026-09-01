@@ -1,3 +1,5 @@
+package minty;
+
 import java.util.Scanner;
 
 /**

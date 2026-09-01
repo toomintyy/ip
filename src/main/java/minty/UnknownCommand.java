@@ -1,3 +1,5 @@
+package minty;
+
 /**
  * Represents input that does not match any command Minty understands.
  */

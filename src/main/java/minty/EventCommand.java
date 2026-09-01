@@ -1,3 +1,5 @@
+package minty;
+
 /**
  * Adds an event to Minty's task list.
  */
