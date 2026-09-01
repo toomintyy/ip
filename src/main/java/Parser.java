@@ -27,14 +27,21 @@ public final class Parser {
             return new ListCommand();
         case ON:
             return new OnCommand(fullCommand);
+        case MARK:
+            return new MarkCommand(fullCommand);
+        case UNMARK:
+            return new UnmarkCommand(fullCommand);
+        case DELETE:
+            return new DeleteCommand(fullCommand);
         case TODO:
             return new TodoCommand(fullCommand);
         case DEADLINE:
             return new DeadlineCommand(fullCommand);
         case EVENT:
             return new EventCommand(fullCommand);
+        case UNKNOWN:
         default:
-            return new LegacyCommand(fullCommand, commandType);
+            return new UnknownCommand();
         }
     }
 
