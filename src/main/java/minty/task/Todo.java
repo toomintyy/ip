@@ -13,6 +13,11 @@ public class Todo extends Task {
         super(description);
     }
 
+    /**
+     * Returns the todo in Minty's display format.
+     *
+     * @return todo type followed by its status and description
+     */
     @Override
     public String toString() {
         return "[T]" + super.toString();
