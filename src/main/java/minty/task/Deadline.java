@@ -35,11 +35,22 @@ public class Deadline extends Task {
                 + " | " + by;
     }
 
+    /**
+     * Checks whether this deadline is due on the specified date.
+     *
+     * @param date date to check
+     * @return {@code true} if this deadline is due on the date
+     */
     @Override
     public boolean occursOn(LocalDate date) {
         return by.equals(date);
     }
 
+    /**
+     * Returns the deadline in Minty's display format.
+     *
+     * @return task status and description followed by the due date
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by.format(DISPLAY_DATE_FORMAT) + ")";

@@ -38,11 +38,22 @@ public class Event extends Task {
                 + escapeDataField(description) + " | " + from + " | " + to;
     }
 
+    /**
+     * Checks whether this event takes place on the specified date.
+     *
+     * @param date date to check
+     * @return {@code true} if the date falls within this event's date range, inclusive
+     */
     @Override
     public boolean occursOn(LocalDate date) {
         return !date.isBefore(from) && !date.isAfter(to);
     }
 
+    /**
+     * Returns the event in Minty's display format.
+     *
+     * @return task status and description followed by the event's date range
+     */
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from.format(DISPLAY_DATE_FORMAT)
