@@ -7,7 +7,7 @@ public class MintyException extends Exception {
     /**
      * Creates a Minty-specific exception with a message suitable for the user.
      *
-     * @param message explanation of the invalid input
+     * @param message explanation of the invalid input.
      */
     public MintyException(String message) {
         super(message);

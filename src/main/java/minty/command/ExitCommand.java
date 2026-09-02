@@ -12,9 +12,9 @@ public class ExitCommand extends Command {
     /**
      * Performs no task operation because exiting is handled by {@link #isExit()}.
      *
-     * @param tasks task list, which is not changed
-     * @param ui command-line interface, which is not used
-     * @param storage task storage, which is not used
+     * @param tasks task list, which is not changed.
+     * @param ui command-line interface, which is not used.
+     * @param storage task storage, which is not used.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
@@ -24,7 +24,7 @@ public class ExitCommand extends Command {
     /**
      * Indicates that Minty should end after this command.
      *
-     * @return always {@code true}
+     * @return always {@code true}.
      */
     @Override
     public boolean isExit() {

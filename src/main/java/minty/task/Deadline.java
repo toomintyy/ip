@@ -16,8 +16,8 @@ public class Deadline extends Task {
     /**
      * Creates an incomplete deadline.
      *
-     * @param description description of the task
-     * @param by date by which the task should be completed
+     * @param description description of the task.
+     * @param by date by which the task should be completed.
      */
     public Deadline(String description, LocalDate by) {
         super(description);
@@ -27,7 +27,7 @@ public class Deadline extends Task {
     /**
      * Returns the deadline in the format used by the save file.
      *
-     * @return serialized deadline
+     * @return serialized deadline.
      */
     @Override
     public String toDataString() {

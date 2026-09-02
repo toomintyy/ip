@@ -21,8 +21,8 @@ public enum CommandType {
     /**
      * Creates a command type with its input word and argument policy.
      *
-     * @param commandWord word used to invoke the command
-     * @param acceptsArguments whether text may follow the command word
+     * @param commandWord word used to invoke the command.
+     * @param acceptsArguments whether text may follow the command word.
      */
     CommandType(String commandWord, boolean acceptsArguments) {
         this.commandWord = commandWord;
@@ -32,8 +32,8 @@ public enum CommandType {
     /**
      * Identifies the type of a complete command entered by the user.
      *
-     * @param command complete command entered by the user
-     * @return matching command type, or {@link #UNKNOWN} if none matches
+     * @param command complete command entered by the user.
+     * @return matching command type, or {@link #UNKNOWN} if none matches.
      */
     public static CommandType from(String command) {
         for (CommandType type : values()) {
@@ -48,7 +48,7 @@ public enum CommandType {
     /**
      * Returns the word used to invoke this command.
      *
-     * @return command word
+     * @return command word.
      */
     public String getCommandWord() {
         return commandWord;

@@ -22,41 +22,41 @@ public final class Parser {
     /**
      * Converts complete user input into an executable command object.
      *
-     * @param fullCommand complete command entered by the user
-     * @return command ready to execute
+     * @param fullCommand complete command entered by the user.
+     * @return command ready to execute.
      */
     public static Command parse(String fullCommand) {
         CommandType commandType = parseCommandType(fullCommand);
         switch (commandType) {
-        case BYE:
-            return new ExitCommand();
-        case LIST:
-            return new ListCommand();
-        case ON:
-            return new OnCommand(fullCommand);
-        case MARK:
-            return new MarkCommand(fullCommand);
-        case UNMARK:
-            return new UnmarkCommand(fullCommand);
-        case DELETE:
-            return new DeleteCommand(fullCommand);
-        case TODO:
-            return new TodoCommand(fullCommand);
-        case DEADLINE:
-            return new DeadlineCommand(fullCommand);
-        case EVENT:
-            return new EventCommand(fullCommand);
-        case UNKNOWN:
-        default:
-            return new UnknownCommand();
+            case BYE:
+                return new ExitCommand();
+            case LIST:
+                return new ListCommand();
+            case ON:
+                return new OnCommand(fullCommand);
+            case MARK:
+                return new MarkCommand(fullCommand);
+            case UNMARK:
+                return new UnmarkCommand(fullCommand);
+            case DELETE:
+                return new DeleteCommand(fullCommand);
+            case TODO:
+                return new TodoCommand(fullCommand);
+            case DEADLINE:
+                return new DeadlineCommand(fullCommand);
+            case EVENT:
+                return new EventCommand(fullCommand);
+            case UNKNOWN:
+            default:
+                return new UnknownCommand();
         }
     }
 
     /**
      * Identifies the type of a complete command.
      *
-     * @param command complete command entered by the user
-     * @return recognized command type, or {@link CommandType#UNKNOWN}
+     * @param command complete command entered by the user.
+     * @return recognized command type, or {@link CommandType#UNKNOWN}.
      */
     public static CommandType parseCommandType(String command) {
         return CommandType.from(command);
@@ -65,11 +65,11 @@ public final class Parser {
     /**
      * Parses and validates the task number supplied to a task-selection command.
      *
-     * @param command complete command entered by the user
-     * @param commandType task-selection command type
-     * @param taskCount current number of stored tasks
-     * @return zero-based index of the selected task
-     * @throws MintyException if the task number is missing, non-numeric, or out of range
+     * @param command complete command entered by the user.
+     * @param commandType task-selection command type.
+     * @param taskCount current number of stored tasks.
+     * @return zero-based index of the selected task.
+     * @throws MintyException if the task number is missing, non-numeric, or out of range.
      */
     public static int parseTaskIndex(String command, CommandType commandType, int taskCount)
             throws MintyException {
@@ -95,9 +95,9 @@ public final class Parser {
     /**
      * Creates a todo after validating its description.
      *
-     * @param command complete todo command
-     * @return validated todo
-     * @throws MintyException if the description is missing
+     * @param command complete todo command.
+     * @return validated todo.
+     * @throws MintyException if the description is missing.
      */
     public static Todo parseTodo(String command) throws MintyException {
         String description = getCommandArguments(command, CommandType.TODO);
@@ -110,9 +110,9 @@ public final class Parser {
     /**
      * Creates a deadline after validating its description and {@code /by} value.
      *
-     * @param command complete deadline command
-     * @return validated deadline
-     * @throws MintyException if any required deadline detail is missing
+     * @param command complete deadline command.
+     * @return validated deadline.
+     * @throws MintyException if any required deadline detail is missing.
      */
     public static Deadline parseDeadline(String command) throws MintyException {
         String details = getCommandArguments(command, CommandType.DEADLINE);
@@ -136,9 +136,9 @@ public final class Parser {
     /**
      * Creates an event after validating its description, start, and end values.
      *
-     * @param command complete event command
-     * @return validated event
-     * @throws MintyException if any required event detail is missing or out of order
+     * @param command complete event command.
+     * @return validated event.
+     * @throws MintyException if any required event detail is missing or out of order.
      */
     public static Event parseEvent(String command) throws MintyException {
         String details = getCommandArguments(command, CommandType.EVENT);
@@ -178,9 +178,9 @@ public final class Parser {
     /**
      * Parses the date supplied to an {@code on} command.
      *
-     * @param command complete on command
-     * @return requested date
-     * @throws MintyException if the date is missing or invalid
+     * @param command complete on command.
+     * @return requested date.
+     * @throws MintyException if the date is missing or invalid.
      */
     public static LocalDate parseOnDate(String command) throws MintyException {
         String dateText = getCommandArguments(command, CommandType.ON);
@@ -193,9 +193,9 @@ public final class Parser {
     /**
      * Returns the trimmed text following a command's identifying word.
      *
-     * @param command complete command entered by the user
-     * @param commandType recognized type of the command
-     * @return trimmed command arguments, or an empty string if none were supplied
+     * @param command complete command entered by the user.
+     * @param commandType recognized type of the command.
+     * @return trimmed command arguments, or an empty string if none were supplied.
      */
     private static String getCommandArguments(String command, CommandType commandType) {
         return command.substring(commandType.getCommandWord().length()).trim();
@@ -204,10 +204,10 @@ public final class Parser {
     /**
      * Parses a date in Minty's required ISO format.
      *
-     * @param dateText date entered by the user
-     * @param dateName name used to identify the date in an error message
-     * @return parsed date
-     * @throws MintyException if the date is not a valid {@code yyyy-MM-dd} value
+     * @param dateText date entered by the user.
+     * @param dateName name used to identify the date in an error message.
+     * @return parsed date.
+     * @throws MintyException if the date is not a valid {@code yyyy-MM-dd} value.
      */
     private static LocalDate parseDate(String dateText, String dateName) throws MintyException {
         try {

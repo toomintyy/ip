@@ -11,7 +11,7 @@ public class DeadlineCommand extends AddCommand {
     /**
      * Creates a deadline command from the user's complete input.
      *
-     * @param fullCommand complete deadline command
+     * @param fullCommand complete deadline command.
      */
     public DeadlineCommand(String fullCommand) {
         super(fullCommand);
@@ -20,9 +20,9 @@ public class DeadlineCommand extends AddCommand {
     /**
      * Parses the deadline represented by the complete command.
      *
-     * @param fullCommand complete deadline command
-     * @return validated deadline
-     * @throws MintyException if the deadline details are invalid
+     * @param fullCommand complete deadline command.
+     * @return validated deadline.
+     * @throws MintyException if the deadline details are invalid.
      */
     @Override
     protected Task createTask(String fullCommand) throws MintyException {

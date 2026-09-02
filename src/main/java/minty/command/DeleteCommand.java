@@ -12,7 +12,7 @@ public class DeleteCommand extends IndexedTaskCommand {
     /**
      * Creates a delete command from the user's complete input.
      *
-     * @param fullCommand complete delete command
+     * @param fullCommand complete delete command.
      */
     public DeleteCommand(String fullCommand) {
         super(fullCommand, CommandType.DELETE);
@@ -21,9 +21,9 @@ public class DeleteCommand extends IndexedTaskCommand {
     /**
      * Deletes the selected task.
      *
-     * @param tasks task list to update
-     * @param taskIndex validated zero-based task index
-     * @return deleted task
+     * @param tasks task list to update.
+     * @param taskIndex validated zero-based task index.
+     * @return deleted task.
      */
     @Override
     protected Task updateTask(TaskList tasks, int taskIndex) {
@@ -33,7 +33,7 @@ public class DeleteCommand extends IndexedTaskCommand {
     /**
      * Returns Minty's deletion confirmation.
      *
-     * @return deletion confirmation message
+     * @return deletion confirmation message.
      */
     @Override
     protected String getConfirmationMessage() {
@@ -43,8 +43,8 @@ public class DeleteCommand extends IndexedTaskCommand {
     /**
      * Shows the number of tasks remaining after deletion.
      *
-     * @param tasks updated task list
-     * @param ui command-line interface used for the response
+     * @param tasks updated task list.
+     * @param ui command-line interface used for the response.
      */
     @Override
     protected void showAdditionalResponse(TaskList tasks, Ui ui) {

@@ -21,7 +21,7 @@ public class TaskList implements Iterable<Task> {
     /**
      * Creates a task list containing tasks loaded from storage.
      *
-     * @param tasks initial tasks
+     * @param tasks initial tasks.
      */
     public TaskList(ArrayList<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
@@ -30,7 +30,7 @@ public class TaskList implements Iterable<Task> {
     /**
      * Adds a task to the end of the list.
      *
-     * @param task task to add
+     * @param task task to add.
      */
     public void add(Task task) {
         tasks.add(task);
@@ -39,8 +39,8 @@ public class TaskList implements Iterable<Task> {
     /**
      * Removes and returns the task at a zero-based index.
      *
-     * @param index zero-based task index
-     * @return removed task
+     * @param index zero-based task index.
+     * @return removed task.
      */
     public Task delete(int index) {
         return tasks.remove(index);
@@ -49,8 +49,8 @@ public class TaskList implements Iterable<Task> {
     /**
      * Marks and returns the task at a zero-based index.
      *
-     * @param index zero-based task index
-     * @return task that was marked
+     * @param index zero-based task index.
+     * @return task that was marked.
      */
     public Task mark(int index) {
         Task task = tasks.get(index);
@@ -61,8 +61,8 @@ public class TaskList implements Iterable<Task> {
     /**
      * Unmarks and returns the task at a zero-based index.
      *
-     * @param index zero-based task index
-     * @return task that was unmarked
+     * @param index zero-based task index.
+     * @return task that was unmarked.
      */
     public Task unmark(int index) {
         Task task = tasks.get(index);
@@ -73,8 +73,8 @@ public class TaskList implements Iterable<Task> {
     /**
      * Returns the dated tasks occurring on a specified date.
      *
-     * @param date date to search for
-     * @return matching deadlines and events in list order
+     * @param date date to search for.
+     * @return matching deadlines and events in list order.
      */
     public ArrayList<Task> findOn(LocalDate date) {
         ArrayList<Task> matches = new ArrayList<>();
@@ -89,7 +89,7 @@ public class TaskList implements Iterable<Task> {
     /**
      * Returns the number of tasks in the list.
      *
-     * @return task count
+     * @return task count.
      */
     public int size() {
         return tasks.size();
@@ -98,7 +98,7 @@ public class TaskList implements Iterable<Task> {
     /**
      * Returns an iterator over the tasks in list order.
      *
-     * @return task iterator
+     * @return task iterator.
      */
     @Override
     public Iterator<Task> iterator() {
