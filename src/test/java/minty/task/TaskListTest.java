@@ -62,4 +62,25 @@ public class TaskListTest {
 
         assertEquals(java.util.List.of(), tasks.findOn(LocalDate.of(2026, 9, 10)));
     }
+
+    @Test
+    public void find_mixedTasks_returnsDescriptionsContainingKeywordInListOrder() {
+        Todo matchingTodo = new Todo("read book");
+        Deadline matchingDeadline = new Deadline("return book",
+                LocalDate.of(2026, 9, 10));
+        Event otherEvent = new Event("conference", LocalDate.of(2026, 9, 10),
+                LocalDate.of(2026, 9, 11));
+        TaskList tasks = new TaskList(new ArrayList<>(
+                java.util.List.of(matchingTodo, matchingDeadline, otherEvent)));
+
+        assertEquals(java.util.List.of(matchingTodo, matchingDeadline), tasks.find("book"));
+    }
+
+    @Test
+    public void find_keywordOnlyInTaskMetadata_returnsEmptyList() {
+        TaskList tasks = new TaskList();
+        tasks.add(new Deadline("submit report", LocalDate.of(2026, 9, 10)));
+
+        assertEquals(java.util.List.of(), tasks.find("2026"));
+    }
 }

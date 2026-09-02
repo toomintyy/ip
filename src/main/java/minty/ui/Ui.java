@@ -92,6 +92,25 @@ public class Ui {
      */
     public void showTaskList(Iterable<Task> tasks) {
         System.out.println(INDENT + "Here are the tasks in your list:");
+        showNumberedTasks(tasks);
+    }
+
+    /**
+     * Shows tasks whose descriptions match a search keyword.
+     *
+     * @param tasks matching tasks to show.
+     */
+    public void showMatchingTasks(Iterable<Task> tasks) {
+        System.out.println(INDENT + "Here are the matching tasks in your list:");
+        showNumberedTasks(tasks);
+    }
+
+    /**
+     * Shows tasks with one-based numbers.
+     *
+     * @param tasks tasks to show.
+     */
+    private void showNumberedTasks(Iterable<Task> tasks) {
         int taskNumber = 1;
         for (Task task : tasks) {
             System.out.println(INDENT + taskNumber + "." + task);

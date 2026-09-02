@@ -777,3 +777,64 @@ ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!
 ____________________________________________________________
+
+=== TC22: Find tasks by description keyword ===
+Aim: Verify that `find` returns matching task descriptions in list order, preserves their displayed types and statuses, excludes metadata-only matches, handles no matches, and validates a missing keyword.
+--- Console input ---
+todo read book
+deadline return book /by 2019-12-02
+event book club /from 2019-12-03 /to 2019-12-04
+mark 1
+find book
+find magazine
+find 2019
+find
+bye
+--- Console output ---
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [T][ ] read book
+  Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [D][ ] return book (by: Dec 02 2019)
+  Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [E][ ] book club (from: Dec 03 2019 to: Dec 04 2019)
+  Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  Nice! I've marked this task as done:
+    [T][X] read book
+____________________________________________________________
+____________________________________________________________
+  Here are the matching tasks in your list:
+  1.[T][X] read book
+  2.[D][ ] return book (by: Dec 02 2019)
+  3.[E][ ] book club (from: Dec 03 2019 to: Dec 04 2019)
+____________________________________________________________
+____________________________________________________________
+  Here are the matching tasks in your list:
+____________________________________________________________
+____________________________________________________________
+  Here are the matching tasks in your list:
+____________________________________________________________
+____________________________________________________________
+  Please provide a keyword to find.
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________

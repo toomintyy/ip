@@ -16,7 +16,7 @@ public class Todo extends Task {
     /**
      * Returns the todo in Minty's display format.
      *
-     * @return todo type followed by its status and description
+     * @return todo type followed by its status and description.
      */
     @Override
     public String toString() {

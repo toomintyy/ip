@@ -55,6 +55,16 @@ public class Task {
     }
 
     /**
+     * Checks whether this task's description contains a keyword.
+     *
+     * @param keyword keyword to search for.
+     * @return {@code true} if the description contains the keyword.
+     */
+    public boolean containsKeyword(String keyword) {
+        return description.contains(keyword);
+    }
+
+    /**
      * Returns the task in the format used by the save file.
      *
      * @return serialized task.

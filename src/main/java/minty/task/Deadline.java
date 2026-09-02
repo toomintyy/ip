@@ -38,8 +38,8 @@ public class Deadline extends Task {
     /**
      * Checks whether this deadline is due on the specified date.
      *
-     * @param date date to check
-     * @return {@code true} if this deadline is due on the date
+     * @param date date to check.
+     * @return {@code true} if this deadline is due on the date.
      */
     @Override
     public boolean occursOn(LocalDate date) {
@@ -49,7 +49,7 @@ public class Deadline extends Task {
     /**
      * Returns the deadline in Minty's display format.
      *
-     * @return task status and description followed by the due date
+     * @return task status and description followed by the due date.
      */
     @Override
     public String toString() {

@@ -34,6 +34,8 @@ public final class Parser {
                 return new ListCommand();
             case ON:
                 return new OnCommand(fullCommand);
+            case FIND:
+                return new FindCommand(fullCommand);
             case MARK:
                 return new MarkCommand(fullCommand);
             case UNMARK:
@@ -188,6 +190,21 @@ public final class Parser {
             throw new MintyException("Please provide a date after on.");
         }
         return parseDate(dateText, "requested");
+    }
+
+    /**
+     * Parses and validates the keyword supplied to a {@code find} command.
+     *
+     * @param command complete find command.
+     * @return keyword to search for.
+     * @throws MintyException if the keyword is missing.
+     */
+    public static String parseFindKeyword(String command) throws MintyException {
+        String keyword = getCommandArguments(command, CommandType.FIND);
+        if (keyword.isEmpty()) {
+            throw new MintyException("Please provide a keyword to find.");
+        }
+        return keyword;
     }
 
     /**
