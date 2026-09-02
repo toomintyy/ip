@@ -21,7 +21,7 @@ public class Minty {
     /**
      * Creates Minty with task storage at the specified path.
      *
-     * @param filePath path to the task data file
+     * @param filePath path to the task data file.
      */
     public Minty(Path filePath) {
         this.ui = new Ui();
@@ -32,7 +32,7 @@ public class Minty {
     /**
      * Starts Minty using the default relative, OS-independent data path.
      *
-     * @param args command-line arguments, which are not used
+     * @param args command-line arguments, which are not used.
      */
     public static void main(String[] args) {
         new Minty(Path.of("data", "minty.txt")).run();
@@ -69,7 +69,7 @@ public class Minty {
     /**
      * Loads the saved task list, or starts with an empty list if reading fails.
      *
-     * @return saved tasks, or an empty list when the file cannot be read
+     * @return saved tasks, or an empty list when the file cannot be read.
      */
     private TaskList loadTasks() {
         try {

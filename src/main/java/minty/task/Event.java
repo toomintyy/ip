@@ -17,9 +17,9 @@ public class Event extends Task {
     /**
      * Creates an incomplete event.
      *
-     * @param description description of the event
-     * @param from date on which the event starts
-     * @param to date on which the event ends
+     * @param description description of the event.
+     * @param from date on which the event starts.
+     * @param to date on which the event ends.
      */
     public Event(String description, LocalDate from, LocalDate to) {
         super(description);
@@ -30,7 +30,7 @@ public class Event extends Task {
     /**
      * Returns the event in the format used by the save file.
      *
-     * @return serialized event
+     * @return serialized event.
      */
     @Override
     public String toDataString() {

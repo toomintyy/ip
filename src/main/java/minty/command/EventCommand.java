@@ -11,7 +11,7 @@ public class EventCommand extends AddCommand {
     /**
      * Creates an event command from the user's complete input.
      *
-     * @param fullCommand complete event command
+     * @param fullCommand complete event command.
      */
     public EventCommand(String fullCommand) {
         super(fullCommand);
@@ -20,9 +20,9 @@ public class EventCommand extends AddCommand {
     /**
      * Parses the event represented by the complete command.
      *
-     * @param fullCommand complete event command
-     * @return validated event
-     * @throws MintyException if the event details are invalid
+     * @param fullCommand complete event command.
+     * @return validated event.
+     * @throws MintyException if the event details are invalid.
      */
     @Override
     protected Task createTask(String fullCommand) throws MintyException {

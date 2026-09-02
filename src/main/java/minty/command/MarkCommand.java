@@ -11,7 +11,7 @@ public class MarkCommand extends IndexedTaskCommand {
     /**
      * Creates a mark command from the user's complete input.
      *
-     * @param fullCommand complete mark command
+     * @param fullCommand complete mark command.
      */
     public MarkCommand(String fullCommand) {
         super(fullCommand, CommandType.MARK);
@@ -20,9 +20,9 @@ public class MarkCommand extends IndexedTaskCommand {
     /**
      * Marks the selected task.
      *
-     * @param tasks task list to update
-     * @param taskIndex validated zero-based task index
-     * @return marked task
+     * @param tasks task list to update.
+     * @param taskIndex validated zero-based task index.
+     * @return marked task.
      */
     @Override
     protected Task updateTask(TaskList tasks, int taskIndex) {
@@ -32,7 +32,7 @@ public class MarkCommand extends IndexedTaskCommand {
     /**
      * Returns Minty's mark confirmation.
      *
-     * @return mark confirmation message
+     * @return mark confirmation message.
      */
     @Override
     protected String getConfirmationMessage() {

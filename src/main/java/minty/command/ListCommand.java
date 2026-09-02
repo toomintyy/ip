@@ -12,9 +12,9 @@ public class ListCommand extends Command {
     /**
      * Shows all tasks in their current list order.
      *
-     * @param tasks task list to display
-     * @param ui command-line interface used for the response
-     * @param storage task storage, which is not used
+     * @param tasks task list to display.
+     * @param ui command-line interface used for the response.
+     * @param storage task storage, which is not used.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {

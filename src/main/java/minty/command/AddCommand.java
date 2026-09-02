@@ -15,7 +15,7 @@ public abstract class AddCommand extends Command {
     /**
      * Creates an add command from the user's complete input.
      *
-     * @param fullCommand complete command entered by the user
+     * @param fullCommand complete command entered by the user.
      */
     protected AddCommand(String fullCommand) {
         this.fullCommand = fullCommand;
@@ -24,10 +24,10 @@ public abstract class AddCommand extends Command {
     /**
      * Parses, adds, saves, and displays the new task.
      *
-     * @param tasks task list to update
-     * @param ui command-line interface used for the response
-     * @param storage destination for updated task data
-     * @throws MintyException if the task details are invalid
+     * @param tasks task list to update.
+     * @param ui command-line interface used for the response.
+     * @param storage destination for updated task data.
+     * @throws MintyException if the task details are invalid.
      */
     @Override
     public final void execute(TaskList tasks, Ui ui, Storage storage) throws MintyException {
@@ -41,9 +41,9 @@ public abstract class AddCommand extends Command {
     /**
      * Creates the specific task represented by the complete command.
      *
-     * @param fullCommand complete command entered by the user
-     * @return validated task
-     * @throws MintyException if the task details are invalid
+     * @param fullCommand complete command entered by the user.
+     * @return validated task.
+     * @throws MintyException if the task details are invalid.
      */
     protected abstract Task createTask(String fullCommand) throws MintyException;
 }

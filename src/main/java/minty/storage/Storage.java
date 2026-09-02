@@ -22,7 +22,7 @@ public class Storage {
     /**
      * Creates storage that reads from and writes to the specified file.
      *
-     * @param filePath path to the task data file
+     * @param filePath path to the task data file.
      */
     public Storage(Path filePath) {
         this.filePath = filePath;
@@ -33,9 +33,9 @@ public class Storage {
      *
      * <p>An empty task list is returned when Minty has not created a save file yet.
      *
-     * @return tasks reconstructed from the save file
-     * @throws IOException if an existing save file cannot be read
-     * @throws MintyException if the save file contains invalid task data
+     * @return tasks reconstructed from the save file.
+     * @throws IOException if an existing save file cannot be read.
+     * @throws MintyException if the save file contains invalid task data.
      */
     public ArrayList<Task> loadTasks() throws IOException, MintyException {
         ArrayList<Task> tasks = new ArrayList<>();
@@ -57,8 +57,8 @@ public class Storage {
     /**
      * Replaces the save file with the current task list.
      *
-     * @param tasks tasks to save
-     * @throws IOException if the data directory or file cannot be written
+     * @param tasks tasks to save.
+     * @throws IOException if the data directory or file cannot be written.
      */
     public void saveTasks(Iterable<Task> tasks) throws IOException {
         Path parentDirectory = filePath.getParent();
@@ -76,10 +76,10 @@ public class Storage {
     /**
      * Reconstructs and validates a task from one save-file line.
      *
-     * @param taskData one line from the save file
-     * @param lineNumber one-based line number used in error messages
-     * @return reconstructed task
-     * @throws MintyException if the saved task is malformed
+     * @param taskData one line from the save file.
+     * @param lineNumber one-based line number used in error messages.
+     * @return reconstructed task.
+     * @throws MintyException if the saved task is malformed.
      */
     private Task parseTask(String taskData, int lineNumber) throws MintyException {
         ArrayList<String> fields = splitFields(taskData, lineNumber);
@@ -89,17 +89,17 @@ public class Storage {
 
         int expectedFieldCount;
         switch (fields.get(0)) {
-        case "T":
-            expectedFieldCount = 3;
-            break;
-        case "D":
-            expectedFieldCount = 4;
-            break;
-        case "E":
-            expectedFieldCount = 5;
-            break;
-        default:
-            throw invalidLine(lineNumber, "unknown task type '" + fields.get(0) + "'");
+            case "T":
+                expectedFieldCount = 3;
+                break;
+            case "D":
+                expectedFieldCount = 4;
+                break;
+            case "E":
+                expectedFieldCount = 5;
+                break;
+            default:
+                throw invalidLine(lineNumber, "unknown task type '" + fields.get(0) + "'");
         }
 
         if (fields.size() != expectedFieldCount) {
@@ -117,22 +117,22 @@ public class Storage {
 
         Task task;
         switch (fields.get(0)) {
-        case "T":
-            task = new Todo(fields.get(2));
-            break;
-        case "D":
-            task = new Deadline(fields.get(2), parseDate(fields.get(3), lineNumber));
-            break;
-        case "E":
-            LocalDate from = parseDate(fields.get(3), lineNumber);
-            LocalDate to = parseDate(fields.get(4), lineNumber);
-            if (to.isBefore(from)) {
-                throw invalidLine(lineNumber, "event end date is before its start date");
-            }
-            task = new Event(fields.get(2), from, to);
-            break;
-        default:
-            throw new AssertionError("Task type was already validated");
+            case "T":
+                task = new Todo(fields.get(2));
+                break;
+            case "D":
+                task = new Deadline(fields.get(2), parseDate(fields.get(3), lineNumber));
+                break;
+            case "E":
+                LocalDate from = parseDate(fields.get(3), lineNumber);
+                LocalDate to = parseDate(fields.get(4), lineNumber);
+                if (to.isBefore(from)) {
+                    throw invalidLine(lineNumber, "event end date is before its start date");
+                }
+                task = new Event(fields.get(2), from, to);
+                break;
+            default:
+                throw new AssertionError("Task type was already validated");
         }
         if (fields.get(1).equals("1")) {
             task.markAsDone();
@@ -143,10 +143,10 @@ public class Storage {
     /**
      * Parses a saved date in ISO format.
      *
-     * @param dateText saved date text
-     * @param lineNumber one-based line number used in error messages
-     * @return parsed date
-     * @throws MintyException if the saved date is invalid
+     * @param dateText saved date text.
+     * @param lineNumber one-based line number used in error messages.
+     * @return parsed date.
+     * @throws MintyException if the saved date is invalid.
      */
     private LocalDate parseDate(String dateText, int lineNumber) throws MintyException {
         try {
@@ -159,10 +159,10 @@ public class Storage {
     /**
      * Splits fields at unescaped pipe characters and removes format padding.
      *
-     * @param taskData serialized task
-     * @param lineNumber one-based line number used in error messages
-     * @return unescaped task fields
-     * @throws MintyException if an escape sequence is incomplete or unsupported
+     * @param taskData serialized task.
+     * @param lineNumber one-based line number used in error messages.
+     * @return unescaped task fields.
+     * @throws MintyException if an escape sequence is incomplete or unsupported.
      */
     private ArrayList<String> splitFields(String taskData, int lineNumber) throws MintyException {
         ArrayList<String> fields = new ArrayList<>();
@@ -198,9 +198,9 @@ public class Storage {
     /**
      * Creates a consistent, user-friendly error for malformed saved data.
      *
-     * @param lineNumber line containing the error
-     * @param reason explanation of the invalid data
-     * @return Minty-specific exception
+     * @param lineNumber line containing the error.
+     * @param reason explanation of the invalid data.
+     * @return Minty-specific exception.
      */
     private MintyException invalidLine(int lineNumber, String reason) {
         return new MintyException("Invalid data on line " + lineNumber + ": " + reason + ".");

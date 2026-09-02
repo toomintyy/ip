@@ -11,12 +11,16 @@ public class Ui {
     private static final String DIVIDER = "____________________________________________________________";
     private static final String INDENT = "  ";
     private static final String BANNER =
-              "███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗\n"
-            + "████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝\n"
-            + "██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝\n"
-            + "██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝\n"
-            + "██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║\n"
-            + "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝\n";
+            "███╗   ███╗██╗███╗   ██╗████"
+                    + "████╗██╗   ██╗\n"
+                    + "████╗ ████║██║████╗  ██║╚══██"
+                    + "╔══╝╚██╗ ██╔╝\n"
+                    + "██╔████╔██║██║██╔██╗ ██║   ██"
+                    + "║    ╚████╔╝\n"
+                    + "██║╚██╔╝██║██║██║╚██╗██║   ██"
+                    + "║     ╚██╔╝\n"
+                    + "██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║\n"
+                    + "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝\n";
 
     private final Scanner scanner;
 
@@ -30,7 +34,7 @@ public class Ui {
     /**
      * Returns whether another command is available.
      *
-     * @return true when standard input contains another line
+     * @return true when standard input contains another line.
      */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
@@ -39,7 +43,7 @@ public class Ui {
     /**
      * Reads the next command from standard input.
      *
-     * @return command entered by the user
+     * @return command entered by the user.
      */
     public String readCommand() {
         return scanner.nextLine();
@@ -75,7 +79,7 @@ public class Ui {
     /**
      * Shows an error message using Minty's standard indentation.
      *
-     * @param message error details to show
+     * @param message error details to show.
      */
     public void showError(String message) {
         System.out.println(INDENT + message);
@@ -84,7 +88,7 @@ public class Ui {
     /**
      * Shows every task in the list with a one-based number.
      *
-     * @param tasks tasks to show
+     * @param tasks tasks to show.
      */
     public void showTaskList(Iterable<Task> tasks) {
         System.out.println(INDENT + "Here are the tasks in your list:");
@@ -98,8 +102,8 @@ public class Ui {
     /**
      * Shows a message followed by one indented task.
      *
-     * @param message confirmation message
-     * @param task task affected by the command
+     * @param message confirmation message.
+     * @param task task affected by the command.
      */
     public void showTask(String message, Task task) {
         System.out.println(INDENT + message);
@@ -109,7 +113,7 @@ public class Ui {
     /**
      * Shows the current number of tasks with correct singular or plural wording.
      *
-     * @param taskCount current number of tasks
+     * @param taskCount current number of tasks.
      */
     public void showTaskCount(int taskCount) {
         String taskNoun = taskCount == 1 ? "task" : "tasks";
@@ -120,7 +124,7 @@ public class Ui {
     /**
      * Shows a normal response line using Minty's standard indentation.
      *
-     * @param message response to show
+     * @param message response to show.
      */
     public void showMessage(String message) {
         System.out.println(INDENT + message);
@@ -129,8 +133,8 @@ public class Ui {
     /**
      * Shows a numbered task within a filtered result.
      *
-     * @param number one-based result number
-     * @param task matching task
+     * @param number one-based result number.
+     * @param task matching task.
      */
     public void showNumberedTask(int number, Task task) {
         System.out.println(INDENT + number + "." + task);

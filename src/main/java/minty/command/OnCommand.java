@@ -22,7 +22,7 @@ public class OnCommand extends Command {
     /**
      * Creates a date-query command from the user's complete input.
      *
-     * @param fullCommand complete {@code on} command
+     * @param fullCommand complete {@code on} command.
      */
     public OnCommand(String fullCommand) {
         this.fullCommand = fullCommand;
@@ -31,10 +31,10 @@ public class OnCommand extends Command {
     /**
      * Parses the requested date and displays every matching deadline and event.
      *
-     * @param tasks task list to search
-     * @param ui command-line interface used for the response
-     * @param storage task storage, which is not used
-     * @throws MintyException if the date is missing or invalid
+     * @param tasks task list to search.
+     * @param ui command-line interface used for the response.
+     * @param storage task storage, which is not used.
+     * @throws MintyException if the date is missing or invalid.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws MintyException {
