@@ -47,6 +47,7 @@ After every code change, review the affected behavior and add or update JUnit te
 
 ## Git
 
+For every future commit or branch-name proposal in this repository, load and follow the project-specific `seedu-git-standard` skill at `.codex/skills/seedu-git-standard/SKILL.md`.
+
 Use lightweight tags unless the user requests an annotated tag.
-When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
