@@ -152,9 +152,20 @@ public class ParserTest {
     }
 
     @Test
+    public void parseFindKeyword_validKeyword_returnsKeyword() throws MintyException {
+        assertEquals("read book", Parser.parseFindKeyword("find read book"));
+    }
+
+    @Test
+    public void parseFindKeyword_missingKeyword_throwsMintyException() {
+        assertThrows(MintyException.class, () -> Parser.parseFindKeyword("find"));
+    }
+
+    @Test
     public void parse_recognizedAndUnknownCommands_returnsMatchingCommandTypes() {
         assertInstanceOf(ExitCommand.class, Parser.parse("bye"));
         assertInstanceOf(ListCommand.class, Parser.parse("list"));
+        assertInstanceOf(FindCommand.class, Parser.parse("find book"));
         assertInstanceOf(MarkCommand.class, Parser.parse("mark 1"));
         assertInstanceOf(TodoCommand.class, Parser.parse("todo read book"));
         assertInstanceOf(DeadlineCommand.class,

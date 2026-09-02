@@ -1,4 +1,4 @@
-# Minty Level 8 UI Test Plan
+# Minty Level 9 UI Test Plan
 
 These tests run with Java 25. Each test starts a fresh instance of Minty and compares the complete console output exactly.
 
@@ -26,7 +26,8 @@ These tests run with Java 25. Each test starts a fresh instance of Minty and com
 | Parse and format ISO dates | TC1, TC5, TC10 | TC18 |
 | Invalid dates in saved data | — | TC19, TC20 |
 | `on` date query | TC21 | TC21 |
-| Startup and `bye` | TC1–TC21 | — |
+| `find` keyword search | TC22 | TC22 |
+| Startup and `bye` | TC1–TC22 | — |
 
 The use of `ArrayList<Task>` is an implementation detail and is verified by code review rather than console output. The UI tests verify its observable add, lookup, renumbering, and deletion behavior.
 
@@ -993,6 +994,76 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Please use yyyy-MM-dd for the requested date.
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC22: Find tasks by description keyword
+
+Aim: Verify that `find` returns matching task descriptions in list order, preserves their displayed types and statuses, excludes metadata-only matches, handles no matches, and validates a missing keyword.
+
+### Input
+
+```text
+todo read book
+deadline return book /by 2019-12-02
+event book club /from 2019-12-03 /to 2019-12-04
+mark 1
+find book
+find magazine
+find 2019
+find
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [T][ ] read book
+  Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [D][ ] return book (by: Dec 02 2019)
+  Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  Got it. I've added this task:
+    [E][ ] book club (from: Dec 03 2019 to: Dec 04 2019)
+  Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+  Nice! I've marked this task as done:
+    [T][X] read book
+____________________________________________________________
+____________________________________________________________
+  Here are the matching tasks in your list:
+  1.[T][X] read book
+  2.[D][ ] return book (by: Dec 02 2019)
+  3.[E][ ] book club (from: Dec 03 2019 to: Dec 04 2019)
+____________________________________________________________
+____________________________________________________________
+  Here are the matching tasks in your list:
+____________________________________________________________
+____________________________________________________________
+  Here are the matching tasks in your list:
+____________________________________________________________
+____________________________________________________________
+  Please provide a keyword to find.
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!
