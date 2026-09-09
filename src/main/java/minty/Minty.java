@@ -1,6 +1,9 @@
 package minty;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 import minty.command.Command;
@@ -27,6 +30,30 @@ public class Minty {
         this.ui = new Ui();
         this.storage = new Storage(filePath);
         this.tasks = loadTasks();
+    }
+
+    /**
+     * Executes one command and returns Minty's response for a graphical interface.
+     *
+     * @param input complete command entered by the user.
+     * @return Minty's response without command-line dividers.
+     */
+    public String getResponse(String input) {
+        ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
+        PrintStream responseOutput = new PrintStream(responseBuffer, true, StandardCharsets.UTF_8);
+        Ui responseUi = new Ui(responseOutput);
+        Command command = Parser.parse(input);
+
+        try {
+            command.execute(tasks, responseUi, storage);
+            if (command.isExit()) {
+                responseUi.showMessage("Bye. Hope to see you again soon!");
+            }
+        } catch (MintyException exception) {
+            responseUi.showError(exception.getMessage());
+        }
+
+        return responseBuffer.toString(StandardCharsets.UTF_8).stripIndent().strip();
     }
 
     /**

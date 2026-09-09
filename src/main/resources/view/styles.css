@@ -1,0 +1,47 @@
+.root {
+    -fx-background-color: #f3faf7;
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+}
+
+.scroll-pane,
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.dialog-box {
+    -fx-padding: 6px 12px;
+}
+
+.user-message,
+.minty-message {
+    -fx-background-radius: 12px;
+    -fx-padding: 10px 12px;
+}
+
+.user-message {
+    -fx-background-color: #cdeee0;
+}
+
+.minty-message {
+    -fx-background-color: white;
+    -fx-border-color: #b6d7ca;
+    -fx-border-radius: 12px;
+}
+
+.text-field {
+    -fx-background-radius: 8px;
+    -fx-pref-height: 42px;
+}
+
+.button {
+    -fx-background-color: #2d8f68;
+    -fx-background-radius: 8px;
+    -fx-text-fill: white;
+    -fx-pref-height: 42px;
+    -fx-pref-width: 72px;
+}
+
+.input-bar {
+    -fx-padding: 10px;
+}

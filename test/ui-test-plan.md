@@ -1,6 +1,8 @@
-# Minty Level 9 UI Test Plan
+# Minty Level 10 UI Test Plan
 
-These tests run with Java 25. Each test starts a fresh instance of Minty and compares the complete console output exactly.
+These tests run with Java 25. Each test starts a fresh instance of Minty's command-line backend and compares the
+complete console output exactly. The JavaFX launcher and chat controls are verified separately with a startup smoke
+test and computer-use test because rendered windows cannot be compared as console text.
 
 ## Coverage summary
 
@@ -30,6 +32,38 @@ These tests run with Java 25. Each test starts a fresh instance of Minty and com
 | Startup and `bye` | TC1–TC22 | — |
 
 The use of `ArrayList<Task>` is an implementation detail and is verified by code review rather than console output. The UI tests verify its observable add, lookup, renumbering, and deletion behavior.
+
+## JavaFX GUI checks
+
+These checks are performed through the running desktop window rather than by the console test script.
+
+### GUI1: Send a command with the button
+
+1. Enter `todo read book` in the command field.
+2. Click **Send**.
+
+Expected: The conversation shows the command and Minty's confirmation, and the command field is cleared.
+
+### GUI2: Send a command with Enter
+
+1. Enter `list` in the command field.
+2. Press Enter.
+
+Expected: Minty shows the stored task and the conversation scrolls to the newest response.
+
+### GUI3: Recover from invalid input
+
+1. Enter `todo` in the command field.
+2. Click **Send**.
+
+Expected: Minty explains that a todo needs a description, and the window remains usable.
+
+### GUI4: Exit the conversation
+
+1. Enter `bye` in the command field.
+2. Press Enter.
+
+Expected: Minty shows its goodbye message and disables the command field and Send button.
 
 ## TC1: Add, mark, and list all task types
 
