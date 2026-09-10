@@ -70,18 +70,20 @@ public class Ui {
     public void showWelcome() {
         output.println(DIVIDER);
         output.print(BANNER);
-        output.println(INDENT + "Heyyy! I'm Feeling Minty.");
-        output.println(INDENT + "What can I do for you today?");
-        output.println(DIVIDER);
+        printLines(
+                INDENT + "Heyyy! I'm Feeling Minty.",
+                INDENT + "What can I do for you today?",
+                DIVIDER);
     }
 
     /**
      * Shows Minty's farewell.
      */
     public void showGoodbye() {
-        output.println(DIVIDER);
-        output.println(INDENT + "Bye. Hope to see you again soon!");
-        output.println(DIVIDER);
+        printLines(
+                DIVIDER,
+                INDENT + "Bye. Hope to see you again soon!",
+                DIVIDER);
     }
 
     /**
@@ -140,8 +142,9 @@ public class Ui {
      * @param task task affected by the command.
      */
     public void showTask(String message, Task task) {
-        output.println(INDENT + message);
-        output.println(INDENT + INDENT + task);
+        printLines(
+                INDENT + message,
+                INDENT + INDENT + task);
     }
 
     /**
@@ -172,5 +175,16 @@ public class Ui {
      */
     public void showNumberedTask(int number, Task task) {
         output.println(INDENT + number + "." + task);
+    }
+
+    /**
+     * Prints each supplied line in order.
+     *
+     * @param lines lines to print.
+     */
+    private void printLines(String... lines) {
+        for (String line : lines) {
+            output.println(line);
+        }
     }
 }
