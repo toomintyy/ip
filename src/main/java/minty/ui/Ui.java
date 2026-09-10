@@ -1,5 +1,6 @@
 package minty.ui;
 
+import java.io.PrintStream;
 import java.util.Scanner;
 
 import minty.task.Task;
@@ -23,12 +24,24 @@ public class Ui {
                     + "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝\n";
 
     private final Scanner scanner;
+    private final PrintStream output;
 
     /**
      * Creates a UI that reads commands from standard input.
      */
     public Ui() {
         this.scanner = new Scanner(System.in);
+        this.output = System.out;
+    }
+
+    /**
+     * Creates a UI that writes responses to the specified output stream.
+     *
+     * @param output destination for responses.
+     */
+    public Ui(PrintStream output) {
+        this.scanner = null;
+        this.output = output;
     }
 
     /**
@@ -37,6 +50,7 @@ public class Ui {
      * @return true when standard input contains another line.
      */
     public boolean hasNextCommand() {
+        assert scanner != null : "A command-line scanner is required to read input";
         return scanner.hasNextLine();
     }
 
@@ -46,6 +60,7 @@ public class Ui {
      * @return command entered by the user.
      */
     public String readCommand() {
+        assert scanner != null : "A command-line scanner is required to read input";
         return scanner.nextLine();
     }
 
@@ -53,27 +68,29 @@ public class Ui {
      * Shows Minty's greeting.
      */
     public void showWelcome() {
-        System.out.println(DIVIDER);
-        System.out.print(BANNER);
-        System.out.println(INDENT + "Heyyy! I'm Feeling Minty.");
-        System.out.println(INDENT + "What can I do for you today?");
-        System.out.println(DIVIDER);
+        output.println(DIVIDER);
+        output.print(BANNER);
+        printLines(
+                INDENT + "Heyyy! I'm Feeling Minty.",
+                INDENT + "What can I do for you today?",
+                DIVIDER);
     }
 
     /**
      * Shows Minty's farewell.
      */
     public void showGoodbye() {
-        System.out.println(DIVIDER);
-        System.out.println(INDENT + "Bye. Hope to see you again soon!");
-        System.out.println(DIVIDER);
+        printLines(
+                DIVIDER,
+                INDENT + "Bye. Hope to see you again soon!",
+                DIVIDER);
     }
 
     /**
      * Shows a divider between commands and responses.
      */
     public void showDivider() {
-        System.out.println(DIVIDER);
+        output.println(DIVIDER);
     }
 
     /**
@@ -82,7 +99,7 @@ public class Ui {
      * @param message error details to show.
      */
     public void showError(String message) {
-        System.out.println(INDENT + message);
+        output.println(INDENT + message);
     }
 
     /**
@@ -91,7 +108,7 @@ public class Ui {
      * @param tasks tasks to show.
      */
     public void showTaskList(Iterable<Task> tasks) {
-        System.out.println(INDENT + "Here are the tasks in your list:");
+        output.println(INDENT + "Here are the tasks in your list:");
         showNumberedTasks(tasks);
     }
 
@@ -101,7 +118,7 @@ public class Ui {
      * @param tasks matching tasks to show.
      */
     public void showMatchingTasks(Iterable<Task> tasks) {
-        System.out.println(INDENT + "Here are the matching tasks in your list:");
+        output.println(INDENT + "Here are the matching tasks in your list:");
         showNumberedTasks(tasks);
     }
 
@@ -113,7 +130,7 @@ public class Ui {
     private void showNumberedTasks(Iterable<Task> tasks) {
         int taskNumber = 1;
         for (Task task : tasks) {
-            System.out.println(INDENT + taskNumber + "." + task);
+            output.println(INDENT + taskNumber + "." + task);
             taskNumber++;
         }
     }
@@ -125,8 +142,9 @@ public class Ui {
      * @param task task affected by the command.
      */
     public void showTask(String message, Task task) {
-        System.out.println(INDENT + message);
-        System.out.println(INDENT + INDENT + task);
+        printLines(
+                INDENT + message,
+                INDENT + INDENT + task);
     }
 
     /**
@@ -136,7 +154,7 @@ public class Ui {
      */
     public void showTaskCount(int taskCount) {
         String taskNoun = taskCount == 1 ? "task" : "tasks";
-        System.out.println(INDENT + "Now you have " + taskCount + " "
+        output.println(INDENT + "Now you have " + taskCount + " "
                 + taskNoun + " in the list.");
     }
 
@@ -146,7 +164,7 @@ public class Ui {
      * @param message response to show.
      */
     public void showMessage(String message) {
-        System.out.println(INDENT + message);
+        output.println(INDENT + message);
     }
 
     /**
@@ -156,6 +174,17 @@ public class Ui {
      * @param task matching task.
      */
     public void showNumberedTask(int number, Task task) {
-        System.out.println(INDENT + number + "." + task);
+        output.println(INDENT + number + "." + task);
+    }
+
+    /**
+     * Prints each supplied line in order.
+     *
+     * @param lines lines to print.
+     */
+    private void printLines(String... lines) {
+        for (String line : lines) {
+            output.println(line);
+        }
     }
 }
