@@ -1,5 +1,9 @@
 .root {
     -fx-background-color: #f3faf7;
+    -fx-background-image: url("../images/minty-background.png");
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
     -fx-font-family: "Arial";
     -fx-font-size: 14px;
 }
@@ -7,6 +11,11 @@
 .scroll-pane,
 .scroll-pane > .viewport {
     -fx-background-color: transparent;
+}
+
+.dialog-container {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 0;
 }
 
 .dialog-box {
@@ -20,11 +29,11 @@
 }
 
 .user-message {
-    -fx-background-color: #cdeee0;
+    -fx-background-color: rgba(205, 238, 224, 0.94);
 }
 
 .minty-message {
-    -fx-background-color: white;
+    -fx-background-color: rgba(255, 255, 255, 0.94);
     -fx-border-color: #b6d7ca;
     -fx-border-radius: 12px;
 }
@@ -43,5 +52,6 @@
 }
 
 .input-bar {
+    -fx-background-color: rgba(243, 250, 247, 0.88);
     -fx-padding: 10px;
 }

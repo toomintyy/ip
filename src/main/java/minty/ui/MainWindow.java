@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import minty.Minty;
@@ -24,6 +25,9 @@ public class MainWindow extends AnchorPane {
     @FXML
     private Button sendButton;
 
+    private final Image userImage = new Image(getClass().getResourceAsStream("/images/user-avatar.png"));
+    private final Image mintyImage = new Image(getClass().getResourceAsStream("/images/minty-avatar.png"));
+
     private Minty minty;
 
     /**
@@ -42,7 +46,7 @@ public class MainWindow extends AnchorPane {
     public void setMinty(Minty minty) {
         this.minty = minty;
         dialogContainer.getChildren().add(DialogBox.getMintyDialog(
-                "Heyyy! I'm Feeling Minty.\nWhat can I do for you today?"));
+                "Heyyy! I'm Feeling Minty.\nWhat can I do for you today?", mintyImage));
         userInput.requestFocus();
     }
 
@@ -58,8 +62,8 @@ public class MainWindow extends AnchorPane {
 
         String response = minty.getResponse(input);
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input),
-                DialogBox.getMintyDialog(response));
+                DialogBox.getUserDialog(input, userImage),
+                DialogBox.getMintyDialog(response, mintyImage));
         userInput.clear();
 
         if (input.equals("bye")) {

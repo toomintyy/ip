@@ -65,6 +65,14 @@ Expected: Minty explains that a todo needs a description, and the window remains
 
 Expected: Minty shows its goodbye message and disables the command field and Send button.
 
+### GUI5: Display themed images
+
+1. Start Minty and send any valid command.
+2. Inspect the welcome message and both sides of the new exchange.
+
+Expected: The botanical mint background fills the window. Minty's leaf mascot appears to the left of its messages,
+and the user avatar appears to the right of user messages without obscuring the message text.
+
 ## TC1: Add, mark, and list all task types
 
 Aim: Verify that todos, deadlines, and events are created with the correct details, retain their types when marked, and appear correctly in the task list.
