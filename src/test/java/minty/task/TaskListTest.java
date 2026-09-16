@@ -2,6 +2,7 @@ package minty.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,6 +25,13 @@ public class TaskListTest {
         assertSame(first, deleted);
         assertEquals(1, tasks.size());
         assertSame(second, tasks.iterator().next());
+    }
+
+    @Test
+    public void delete_invalidIndex_throwsAssertionError() {
+        TaskList tasks = new TaskList();
+
+        assertThrows(AssertionError.class, () -> tasks.delete(0));
     }
 
     @Test

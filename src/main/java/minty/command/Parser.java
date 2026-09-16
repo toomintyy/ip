@@ -91,6 +91,8 @@ public final class Parser {
         if (taskIndex < 0 || taskIndex >= taskCount) {
             throw new MintyException("That task number is not in your list.");
         }
+        assert taskIndex >= 0 && taskIndex < taskCount
+                : "Validated task index must be within the task list";
         return taskIndex;
     }
 
@@ -122,6 +124,8 @@ public final class Parser {
         if (bySeparator < 0) {
             throw new MintyException("A deadline needs a /by date or time.");
         }
+        assert bySeparator >= 0
+                : "A deadline separator must exist before extracting its fields";
 
         String description = details.substring(0, bySeparator).trim();
         String byText = details.substring(bySeparator + "/by".length()).trim();
@@ -156,6 +160,8 @@ public final class Parser {
         if (toSeparator < 0) {
             throw new MintyException("An event needs a /to date or time.");
         }
+        assert fromSeparator >= 0 && toSeparator > fromSeparator
+                : "Event separators must be ordered before extracting their fields";
 
         String description = details.substring(0, fromSeparator).trim();
         String fromText = details.substring(fromSeparator + "/from".length(), toSeparator).trim();
