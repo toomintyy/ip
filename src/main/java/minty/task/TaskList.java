@@ -44,6 +44,7 @@ public class TaskList implements Iterable<Task> {
      * @return removed task.
      */
     public Task delete(int index) {
+        assert isValidIndex(index) : "Task index must be validated before deletion";
         return tasks.remove(index);
     }
 
@@ -54,6 +55,7 @@ public class TaskList implements Iterable<Task> {
      * @return task that was marked.
      */
     public Task mark(int index) {
+        assert isValidIndex(index) : "Task index must be validated before marking";
         Task task = tasks.get(index);
         task.markAsDone();
         return task;
@@ -66,6 +68,7 @@ public class TaskList implements Iterable<Task> {
      * @return task that was unmarked.
      */
     public Task unmark(int index) {
+        assert isValidIndex(index) : "Task index must be validated before unmarking";
         Task task = tasks.get(index);
         task.markAsNotDone();
         return task;
@@ -102,6 +105,16 @@ public class TaskList implements Iterable<Task> {
      */
     public int size() {
         return tasks.size();
+    }
+
+    /**
+     * Returns whether an index identifies a task in this list.
+     *
+     * @param index zero-based task index.
+     * @return {@code true} if the index is within the task list.
+     */
+    private boolean isValidIndex(int index) {
+        return index >= 0 && index < tasks.size();
     }
 
     /**
