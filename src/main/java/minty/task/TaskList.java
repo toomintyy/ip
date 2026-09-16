@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 /**
  * Owns Minty's tasks and provides operations for querying and updating them.
@@ -77,13 +78,9 @@ public class TaskList implements Iterable<Task> {
      * @return matching deadlines and events in list order.
      */
     public ArrayList<Task> findOn(LocalDate date) {
-        ArrayList<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.occursOn(date)) {
-                matches.add(task);
-            }
-        }
-        return matches;
+        return tasks.stream()
+                .filter(task -> task.occursOn(date))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -93,13 +90,9 @@ public class TaskList implements Iterable<Task> {
      * @return matching tasks in list order.
      */
     public ArrayList<Task> find(String keyword) {
-        ArrayList<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.containsKeyword(keyword)) {
-                matches.add(task);
-            }
-        }
-        return matches;
+        return tasks.stream()
+                .filter(task -> task.containsKeyword(keyword))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
