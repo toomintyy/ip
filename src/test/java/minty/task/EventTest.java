@@ -2,6 +2,7 @@ package minty.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -49,6 +50,12 @@ public class EventTest {
         Event event = new Event("Conference", START_DATE, END_DATE);
 
         assertFalse(event.occursOn(LocalDate.of(2026, 9, 13)));
+    }
+
+    @Test
+    public void constructor_endBeforeStart_throwsAssertionError() {
+        assertThrows(AssertionError.class, () ->
+                new Event("Conference", END_DATE, START_DATE));
     }
 
     @Test

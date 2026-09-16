@@ -23,6 +23,10 @@ public class Event extends Task {
      */
     public Event(String description, LocalDate from, LocalDate to) {
         super(description);
+        assert from != null : "An event start date must be validated before construction";
+        assert to != null : "An event end date must be validated before construction";
+        assert !to.isBefore(from)
+                : "An event end date must not precede its validated start date";
         this.from = from;
         this.to = to;
     }
