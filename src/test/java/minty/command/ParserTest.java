@@ -162,6 +162,14 @@ public class ParserTest {
     }
 
     @Test
+    public void parseCommandType_argumentPolicies_returnsMatchingCommandTypes() {
+        assertEquals(CommandType.LIST, Parser.parseCommandType("list"));
+        assertEquals(CommandType.UNKNOWN, Parser.parseCommandType("list all"));
+        assertEquals(CommandType.FIND, Parser.parseCommandType("find book"));
+        assertEquals(CommandType.UNKNOWN, Parser.parseCommandType("findbook"));
+    }
+
+    @Test
     public void parse_recognizedAndUnknownCommands_returnsMatchingCommandTypes() {
         assertInstanceOf(ExitCommand.class, Parser.parse("bye"));
         assertInstanceOf(ListCommand.class, Parser.parse("list"));
