@@ -38,8 +38,10 @@ public enum CommandType {
      */
     public static CommandType from(String command) {
         for (CommandType type : values()) {
-            if (command.equals(type.commandWord)
-                    || type.acceptsArguments && command.startsWith(type.commandWord + " ")) {
+            boolean isExactMatch = command.equals(type.commandWord);
+            boolean isMatchWithArguments = type.acceptsArguments
+                    && command.startsWith(type.commandWord + " ");
+            if (isExactMatch || isMatchWithArguments) {
                 return type;
             }
         }
