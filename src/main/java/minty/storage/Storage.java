@@ -17,6 +17,23 @@ import minty.task.Todo;
  * Loads and saves Minty's task list in a local text file.
  */
 public class Storage {
+    private static final int TASK_TYPE_FIELD_INDEX = 0;
+    private static final int STATUS_FIELD_INDEX = 1;
+    private static final int DESCRIPTION_FIELD_INDEX = 2;
+    private static final int DATE_FIELD_INDEX = 3;
+    private static final int EVENT_END_DATE_FIELD_INDEX = 4;
+
+    private static final int MINIMUM_FIELD_COUNT = 2;
+    private static final int TODO_FIELD_COUNT = 3;
+    private static final int DEADLINE_FIELD_COUNT = 4;
+    private static final int EVENT_FIELD_COUNT = 5;
+
+    private static final String TODO_TYPE = "T";
+    private static final String DEADLINE_TYPE = "D";
+    private static final String EVENT_TYPE = "E";
+    private static final String INCOMPLETE_STATUS = "0";
+    private static final String COMPLETE_STATUS = "1";
+
     private final Path filePath;
 
     /**
@@ -83,61 +100,104 @@ public class Storage {
      */
     private Task parseTask(String taskData, int lineNumber) throws MintyException {
         ArrayList<String> fields = splitFields(taskData, lineNumber);
-        if (fields.size() < 2) {
+        validateFields(fields, lineNumber);
+
+        Task task = createTask(fields, lineNumber);
+        if (fields.get(STATUS_FIELD_INDEX).equals(COMPLETE_STATUS)) {
+            task.markAsDone();
+        }
+        return task;
+    }
+
+    /**
+     * Validates the structure and values of all fields in one saved task.
+     *
+     * @param fields saved task fields.
+     * @param lineNumber one-based line number used in error messages.
+     * @throws MintyException if any field is missing or invalid.
+     */
+    private void validateFields(ArrayList<String> fields, int lineNumber) throws MintyException {
+        if (fields.size() < MINIMUM_FIELD_COUNT) {
             throw invalidLine(lineNumber, "missing task fields");
         }
 
-        int expectedFieldCount;
-        switch (fields.get(0)) {
-            case "T":
-                expectedFieldCount = 3;
-                break;
-            case "D":
-                expectedFieldCount = 4;
-                break;
-            case "E":
-                expectedFieldCount = 5;
-                break;
-            default:
-                throw invalidLine(lineNumber, "unknown task type '" + fields.get(0) + "'");
-        }
-
+        int expectedFieldCount = getExpectedFieldCount(
+                fields.get(TASK_TYPE_FIELD_INDEX), lineNumber);
         if (fields.size() != expectedFieldCount) {
             throw invalidLine(lineNumber, "expected " + expectedFieldCount
                     + " fields but found " + fields.size());
         }
-        if (!fields.get(1).equals("0") && !fields.get(1).equals("1")) {
+
+        String status = fields.get(STATUS_FIELD_INDEX);
+        if (!status.equals(INCOMPLETE_STATUS) && !status.equals(COMPLETE_STATUS)) {
             throw invalidLine(lineNumber, "status must be 0 or 1");
         }
-        for (int i = 2; i < fields.size(); i++) {
+
+        for (int i = DESCRIPTION_FIELD_INDEX; i < fields.size(); i++) {
             if (fields.get(i).isEmpty()) {
                 throw invalidLine(lineNumber, "task details cannot be empty");
             }
         }
+    }
 
-        Task task;
-        switch (fields.get(0)) {
-            case "T":
-                task = new Todo(fields.get(2));
-                break;
-            case "D":
-                task = new Deadline(fields.get(2), parseDate(fields.get(3), lineNumber));
-                break;
-            case "E":
-                LocalDate from = parseDate(fields.get(3), lineNumber);
-                LocalDate to = parseDate(fields.get(4), lineNumber);
-                if (to.isBefore(from)) {
-                    throw invalidLine(lineNumber, "event end date is before its start date");
-                }
-                task = new Event(fields.get(2), from, to);
-                break;
+    /**
+     * Returns the number of fields required by a saved task type.
+     *
+     * @param taskType saved task type code.
+     * @param lineNumber one-based line number used in error messages.
+     * @return required number of fields.
+     * @throws MintyException if the task type is unknown.
+     */
+    private int getExpectedFieldCount(String taskType, int lineNumber) throws MintyException {
+        switch (taskType) {
+            case TODO_TYPE:
+                return TODO_FIELD_COUNT;
+            case DEADLINE_TYPE:
+                return DEADLINE_FIELD_COUNT;
+            case EVENT_TYPE:
+                return EVENT_FIELD_COUNT;
+            default:
+                throw invalidLine(lineNumber, "unknown task type '" + taskType + "'");
+        }
+    }
+
+    /**
+     * Creates a task from fields that have passed structural validation.
+     *
+     * @param fields validated saved task fields.
+     * @param lineNumber one-based line number used in error messages.
+     * @return reconstructed task.
+     * @throws MintyException if a saved date is invalid.
+     */
+    private Task createTask(ArrayList<String> fields, int lineNumber) throws MintyException {
+        switch (fields.get(TASK_TYPE_FIELD_INDEX)) {
+            case TODO_TYPE:
+                return new Todo(fields.get(DESCRIPTION_FIELD_INDEX));
+            case DEADLINE_TYPE:
+                return new Deadline(fields.get(DESCRIPTION_FIELD_INDEX),
+                        parseDate(fields.get(DATE_FIELD_INDEX), lineNumber));
+            case EVENT_TYPE:
+                return createEvent(fields, lineNumber);
             default:
                 throw new AssertionError("Task type was already validated");
         }
-        if (fields.get(1).equals("1")) {
-            task.markAsDone();
+    }
+
+    /**
+     * Creates an event after validating the order of its saved dates.
+     *
+     * @param fields validated saved event fields.
+     * @param lineNumber one-based line number used in error messages.
+     * @return reconstructed event.
+     * @throws MintyException if a saved date is invalid or out of order.
+     */
+    private Event createEvent(ArrayList<String> fields, int lineNumber) throws MintyException {
+        LocalDate from = parseDate(fields.get(DATE_FIELD_INDEX), lineNumber);
+        LocalDate to = parseDate(fields.get(EVENT_END_DATE_FIELD_INDEX), lineNumber);
+        if (to.isBefore(from)) {
+            throw invalidLine(lineNumber, "event end date is before its start date");
         }
-        return task;
+        return new Event(fields.get(DESCRIPTION_FIELD_INDEX), from, to);
     }
 
     /**
