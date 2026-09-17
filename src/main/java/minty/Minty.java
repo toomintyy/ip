@@ -5,9 +5,13 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.util.List;
 
 import minty.command.Command;
 import minty.command.Parser;
+import minty.command.RemindersCommand;
 import minty.exception.MintyException;
 import minty.storage.Storage;
 import minty.task.TaskList;
@@ -20,6 +24,7 @@ public class Minty {
     private final Ui ui;
     private final Storage storage;
     private final TaskList tasks;
+    private final Clock clock;
 
     /**
      * Creates Minty with task storage at the specified path.
@@ -27,6 +32,17 @@ public class Minty {
      * @param filePath path to the task data file.
      */
     public Minty(Path filePath) {
+        this(filePath, Clock.systemDefaultZone());
+    }
+
+    /**
+     * Creates Minty with a supplied clock for repeatable reminder tests.
+     *
+     * @param filePath task storage path.
+     * @param clock source of the current local date.
+     */
+    Minty(Path filePath, Clock clock) {
+        this.clock = clock;
         this.ui = new Ui();
         this.storage = new Storage(filePath);
         this.tasks = loadTasks();
@@ -42,7 +58,7 @@ public class Minty {
         ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
         PrintStream responseOutput = new PrintStream(responseBuffer, true, StandardCharsets.UTF_8);
         Ui responseUi = new Ui(responseOutput);
-        Command command = Parser.parse(input);
+        Command command = Parser.parse(input, clock);
 
         try {
             command.execute(tasks, responseUi, storage);
@@ -53,7 +69,11 @@ public class Minty {
             responseUi.showError(exception.getMessage());
         }
 
-        return responseBuffer.toString(StandardCharsets.UTF_8).stripIndent().strip();
+        String response = responseBuffer.toString(StandardCharsets.UTF_8);
+        if (command instanceof RemindersCommand) {
+            return response.stripTrailing().stripIndent().strip();
+        }
+        return response.stripIndent().strip();
     }
 
     /**
@@ -70,10 +90,16 @@ public class Minty {
      */
     public void run() {
         ui.showWelcome();
+        List<TaskList.NumberedTask> reminders = tasks.findReminders(LocalDate.now(clock));
+        if (!reminders.isEmpty()) {
+            ui.showDivider();
+            RemindersCommand.showReminders(reminders, ui);
+            ui.showDivider();
+        }
 
         boolean isExit = false;
         while (!isExit && ui.hasNextCommand()) {
-            Command command = Parser.parse(ui.readCommand());
+            Command command = Parser.parse(ui.readCommand(), clock);
             if (!command.isExit()) {
                 ui.showDivider();
             }
@@ -105,5 +131,21 @@ public class Minty {
             ui.showError("I couldn't load the tasks: " + exception.getMessage());
             return new TaskList();
         }
+    }
+
+    /**
+     * Returns the startup reminder message, or an empty string when no tasks qualify.
+     *
+     * @return optional startup chat text.
+     */
+    public String getStartupReminders() {
+        List<TaskList.NumberedTask> reminders = tasks.findReminders(LocalDate.now(clock));
+        if (reminders.isEmpty()) {
+            return "";
+        }
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        Ui responseUi = new Ui(new PrintStream(buffer, true, StandardCharsets.UTF_8));
+        RemindersCommand.showReminders(reminders, responseUi);
+        return buffer.toString(StandardCharsets.UTF_8).stripTrailing().stripIndent().strip();
     }
 }

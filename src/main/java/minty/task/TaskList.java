@@ -3,6 +3,7 @@ package minty.task;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
@@ -105,6 +106,34 @@ public class TaskList implements Iterable<Task> {
      */
     public int size() {
         return tasks.size();
+    }
+
+    /**
+     * Returns reminders for today through six days later, keeping original task numbers.
+     *
+     * @param today first date in the reminder window.
+     * @return matches ordered by date, then original list order.
+     */
+    public ArrayList<NumberedTask> findReminders(LocalDate today) {
+        ArrayList<NumberedTask> matches = new ArrayList<>();
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (!task.isDone() && task.getReminderDate().filter(date ->
+                    !date.isBefore(today) && date.toEpochDay() - today.toEpochDay() < 7).isPresent()) {
+                matches.add(new NumberedTask(i + 1, task));
+            }
+        }
+        matches.sort(Comparator.comparing(match -> match.task().getReminderDate().orElseThrow()));
+        return matches;
+    }
+
+    /**
+     * Associates a task with its current one-based number in the full list.
+     *
+     * @param number original task number.
+     * @param task matching task.
+     */
+    public record NumberedTask(int number, Task task) {
     }
 
     /**

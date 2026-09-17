@@ -3,6 +3,7 @@ package minty.task;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Represents a task that takes place between a start and an end date.
@@ -51,6 +52,11 @@ public class Event extends Task {
     @Override
     public boolean occursOn(LocalDate date) {
         return !date.isBefore(from) && !date.isAfter(to);
+    }
+
+    @Override
+    public Optional<LocalDate> getReminderDate() {
+        return Optional.of(from);
     }
 
     /**
