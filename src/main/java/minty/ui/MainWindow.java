@@ -48,6 +48,10 @@ public class MainWindow extends AnchorPane {
         dialogContainer.getChildren().add(DialogBox.getMintyDialog(
                 "Heyyy! I'm Feeling Minty.\nWhat can I do for you today?", mintyImage));
         userInput.requestFocus();
+        String reminders = minty.getStartupReminders();
+        if (!reminders.isEmpty()) {
+            dialogContainer.getChildren().add(DialogBox.getMintyDialog(reminders, mintyImage));
+        }
     }
 
     /**

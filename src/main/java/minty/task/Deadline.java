@@ -3,6 +3,7 @@ package minty.task;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Represents a task that must be completed by a given date.
@@ -44,6 +45,11 @@ public class Deadline extends Task {
     @Override
     public boolean occursOn(LocalDate date) {
         return by.equals(date);
+    }
+
+    @Override
+    public Optional<LocalDate> getReminderDate() {
+        return Optional.of(by);
     }
 
     /**

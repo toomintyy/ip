@@ -6,6 +6,8 @@ package minty.command;
 public enum CommandType {
     BYE("bye", false),
     LIST("list", false),
+    REMINDERS("reminders", false),
+    REMIND("remind", false),
     MARK("mark", true),
     UNMARK("unmark", true),
     DELETE("delete", true),

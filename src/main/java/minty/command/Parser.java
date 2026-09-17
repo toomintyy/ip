@@ -1,5 +1,6 @@
 package minty.command;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -26,12 +27,26 @@ public final class Parser {
      * @return command ready to execute.
      */
     public static Command parse(String fullCommand) {
+        return parse(fullCommand, Clock.systemDefaultZone());
+    }
+
+    /**
+     * Parses a command with the clock used to evaluate reminders.
+     *
+     * @param fullCommand complete user input.
+     * @param clock source of the current local date.
+     * @return executable command.
+     */
+    public static Command parse(String fullCommand, Clock clock) {
         CommandType commandType = parseCommandType(fullCommand);
         switch (commandType) {
             case BYE:
                 return new ExitCommand();
             case LIST:
                 return new ListCommand();
+            case REMINDERS:
+            case REMIND:
+                return new RemindersCommand(LocalDate.now(clock));
             case ON:
                 return new OnCommand(fullCommand);
             case FIND:

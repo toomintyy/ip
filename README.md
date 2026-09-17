@@ -2,6 +2,10 @@
 
 Minty is a chatbot developed as a greenfield Java project.
 
+Use `reminders` (or `remind`) to view incomplete deadlines due and events starting
+today through six days later. Qualifying reminders also appear at startup.
+See the [user guide](docs/README.md#reminders) for details.
+
 ## Setting up in Intellij
 
 Prerequisites: JDK 25, update Intellij to the most recent version.

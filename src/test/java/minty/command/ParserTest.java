@@ -171,6 +171,9 @@ public class ParserTest {
 
     @Test
     public void parse_recognizedAndUnknownCommands_returnsMatchingCommandTypes() {
+        assertInstanceOf(RemindersCommand.class, Parser.parse("reminders"));
+        assertInstanceOf(RemindersCommand.class, Parser.parse("remind"));
+        assertInstanceOf(UnknownCommand.class, Parser.parse("reminders 14"));
         assertInstanceOf(ExitCommand.class, Parser.parse("bye"));
         assertInstanceOf(ListCommand.class, Parser.parse("list"));
         assertInstanceOf(FindCommand.class, Parser.parse("find book"));

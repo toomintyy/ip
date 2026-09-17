@@ -1,6 +1,7 @@
 package minty.task;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * Represents a task and whether it has been completed.
@@ -40,6 +41,19 @@ public class Task {
      */
     public void markAsNotDone() {
         isDone = false;
+    }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
+     * Returns the date used for reminders, if this task has one.
+     *
+     * @return empty for undated tasks.
+     */
+    public Optional<LocalDate> getReminderDate() {
+        return Optional.empty();
     }
 
     /**

@@ -1,5 +1,15 @@
 # Minty Level 10 UI Test Plan
 
+Reminder date boundaries, ordering, persistence, lifecycle changes, and console startup are tested
+with a fixed clock in JUnit. TC23 checks exact console syntax and empty output.
+
+### GUI6: Startup reminders
+
+Using an isolated data file, save an incomplete deadline due today, then restart Minty.
+Expected: one separate reminder bubble follows the greeting, showing the deadline's original list number.
+Enter `remind` and `reminders`; both show the same text. Mark the task done, then restart:
+no reminder bubble appears. Existing conversation bubbles remain unchanged after marking.
+
 These tests run with Java 25. Each test starts a fresh instance of Minty's command-line backend and compares the
 complete console output exactly. The JavaFX launcher and chat controls are verified separately with a startup smoke
 test and computer-use test because rendered windows cannot be compared as console text.
@@ -1106,6 +1116,52 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Please provide a keyword to find.
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## TC23: Query empty reminders and reject arguments
+
+Aim: Verify both reminder aliases, empty output, and rejection of arguments without depending on the current date.
+
+### Input
+
+```text
+reminders
+remind
+reminders 14
+remind 2
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Here are your reminders for today and the next 6 days:
+  There are no incomplete deadlines or events in this period.
+____________________________________________________________
+____________________________________________________________
+  Here are your reminders for today and the next 6 days:
+  There are no incomplete deadlines or events in this period.
+____________________________________________________________
+____________________________________________________________
+  Sorry, I don't understand that command.
+____________________________________________________________
+____________________________________________________________
+  Sorry, I don't understand that command.
 ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!

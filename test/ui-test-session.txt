@@ -838,3 +838,40 @@ ____________________________________________________________
 ____________________________________________________________
   Bye. Hope to see you again soon!
 ____________________________________________________________
+
+=== TC23: Query empty reminders and reject arguments ===
+Aim: Verify both reminder aliases, empty output, and rejection of arguments without depending on the current date.
+--- Console input ---
+reminders
+remind
+reminders 14
+remind 2
+bye
+--- Console output ---
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Feeling Minty.
+  What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+  Here are your reminders for today and the next 6 days:
+  There are no incomplete deadlines or events in this period.
+____________________________________________________________
+____________________________________________________________
+  Here are your reminders for today and the next 6 days:
+  There are no incomplete deadlines or events in this period.
+____________________________________________________________
+____________________________________________________________
+  Sorry, I don't understand that command.
+____________________________________________________________
+____________________________________________________________
+  Sorry, I don't understand that command.
+____________________________________________________________
+____________________________________________________________
+  Bye. Hope to see you again soon!
+____________________________________________________________
