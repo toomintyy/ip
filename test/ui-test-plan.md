@@ -150,6 +150,16 @@ with dark-red text and a "Needs attention" heading. Speech tails match each
 bubble. Subsequent responses use their own colors, and old bubbles stay unchanged.
 Startup reminders also use pale blue. Save failures take priority over success.
 
+### GUI13: Softened conversation background
+
+1. Start Minty and compare the center of the conversation with its edges.
+2. Send enough messages to scroll and resize the window.
+
+Expected: A cream wash softens leaves through the middle of the conversation,
+fading smoothly to richer foliage at both edges. The wash stays fixed behind
+the scrolling messages and adapts to the viewport width. Avatars, bubbles,
+header, input controls, and text retain their normal colors and opacity.
+
 ## TC1: Add, mark, and list all task types
 
 Aim: Verify that todos, deadlines, and events are created with the correct details, retain their types when marked, and appear correctly in the task list.

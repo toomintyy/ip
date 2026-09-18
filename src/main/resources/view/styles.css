@@ -8,9 +8,18 @@
     -fx-font-size: 15px;
 }
 
-.scroll-pane,
-.scroll-pane > .viewport {
+.scroll-pane {
     -fx-background-color: transparent;
+}
+
+/* Soften the conversation's center while retaining foliage at the edges. */
+.scroll-pane > .viewport {
+    -fx-background-color: linear-gradient(to right,
+            rgba(251, 252, 242, 0) 0%,
+            rgba(251, 252, 242, 0.55) 25%,
+            rgba(251, 252, 242, 0.78) 50%,
+            rgba(251, 252, 242, 0.55) 75%,
+            rgba(251, 252, 242, 0) 100%);
 }
 
 .dialog-container {
