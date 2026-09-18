@@ -65,7 +65,7 @@ public class MintyTest {
 
         assertEquals(empty, minty.getResponse("list"));
         minty.getResponse("todo read book");
-        assertTrue(minty.getResponse("list").contains("1.[T][ ] read book"));
+        assertTrue(minty.getResponse("list").contains("1. [T][ ] read book"));
         minty.getResponse("delete 1");
         assertEquals(empty, minty.getResponse("list"));
     }
@@ -79,9 +79,9 @@ public class MintyTest {
         assertEquals(noMatches, minty.getResponse("find book"));
         minty.getResponse("todo read book");
         assertEquals(noMatches, minty.getResponse("find magazine"));
-        assertEquals("Found some fresh matches! Here's what matches your search:\n  1.[T][ ] read book",
+        assertEquals("Found some fresh matches! Here's what matches your search:\n  1. [T][ ] read book",
                 minty.getResponse("find book"));
-        assertTrue(new Minty(file).getResponse("list").contains("1.[T][ ] read book"));
+        assertTrue(new Minty(file).getResponse("list").contains("1. [T][ ] read book"));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class MintyTest {
 
         assertTrue(response.startsWith("I've hit a snag saving your tasks. Your changes are in this session,"
                 + " but couldn't be saved to the file. Details: "));
-        assertTrue(minty.getResponse("list").contains("1.[T][ ] read book"));
+        assertTrue(minty.getResponse("list").contains("1. [T][ ] read book"));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class MintyTest {
         String listResponse = minty.getResponse("list");
 
         assertTrue(addResponse.contains("Fresh task coming right up! I've added:"));
-        assertTrue(listResponse.contains("1.[T][ ] read book"));
+        assertTrue(listResponse.contains("1. [T][ ] read book"));
     }
 
     @Test
@@ -143,9 +143,9 @@ public class MintyTest {
         Files.writeString(file, data);
         Minty minty = new Minty(file, FIXED_CLOCK);
         String expected = HEADER + "\n"
-                + "3.[E][ ] starts today (from: Sep 17 2026 to: Sep 25 2026)\n"
-                + "4.[D][ ] today (by: Sep 17 2026)\n"
-                + "2.[D][ ] last day (by: Sep 23 2026)";
+                + "3. [E][ ] starts today (from: Sep 17 2026 to: Sep 25 2026)\n"
+                + "4. [D][ ] today (by: Sep 17 2026)\n"
+                + "2. [D][ ] last day (by: Sep 23 2026)";
 
         assertEquals(expected, minty.getStartupReminders());
         assertEquals(expected, minty.getResponse("reminders"));
@@ -160,7 +160,7 @@ public class MintyTest {
         assertEquals("", minty.getStartupReminders());
         assertEquals(empty, minty.getResponse("reminders"));
         minty.getResponse("deadline work /by 2026-09-17");
-        String populated = HEADER + "\n1.[D][ ] work (by: Sep 17 2026)";
+        String populated = HEADER + "\n1. [D][ ] work (by: Sep 17 2026)";
         assertEquals(populated, minty.getResponse("reminders"));
         minty.getResponse("mark 1");
         assertEquals(empty, minty.getResponse("reminders"));
@@ -195,7 +195,7 @@ public class MintyTest {
             System.setOut(originalOutput);
         }
         String console = output.toString(StandardCharsets.UTF_8);
-        assertTrue(console.contains("  " + HEADER + "\n  1.[D][ ] work (by: Sep 17 2026)\n"));
+        assertTrue(console.contains("  " + HEADER + "\n  1. [D][ ] work (by: Sep 17 2026)\n"));
         assertTrue(console.indexOf(HEADER) > console.indexOf("Let's get things moving. What's on your list today?"));
         assertTrue(console.indexOf(HEADER) < console.indexOf("Stay fresh!"));
     }

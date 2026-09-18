@@ -15,7 +15,7 @@
 
 .dialog-container {
     -fx-background-color: transparent;
-    -fx-padding: 8px 0;
+    -fx-padding: 12px 0;
 }
 
 .dialog-box {
@@ -25,7 +25,8 @@
 .user-message,
 .minty-message {
     -fx-background-radius: 12px;
-    -fx-padding: 10px 12px;
+    -fx-padding: 12px 14px;
+    -fx-line-spacing: 4px;
 }
 
 .user-message {
@@ -41,21 +42,54 @@
 }
 
 .text-field {
-    -fx-background-radius: 8px;
-    -fx-pref-height: 42px;
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10px;
+    -fx-border-color: #8cb8a2;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-padding: 10px 12px;
+    -fx-text-fill: #243e32;
+    -fx-prompt-text-fill: #567363;
+    -fx-highlight-fill: #c4e8d5;
+    -fx-highlight-text-fill: #243e32;
+    -fx-pref-height: 46px;
+    -fx-min-width: 0;
+}
+
+.text-field:focused {
+    -fx-border-color: #26734d;
+    -fx-effect: dropshadow(gaussian, rgba(38, 115, 77, 0.2), 5, 0, 0, 0);
 }
 
 .button {
-    -fx-background-color: #2d8f68;
-    -fx-background-radius: 8px;
+    -fx-background-color: #26734d;
+    -fx-background-radius: 10px;
     -fx-text-fill: white;
-    -fx-pref-height: 42px;
+    -fx-pref-height: 46px;
     -fx-pref-width: 72px;
+    -fx-min-width: 72px;
+}
+
+.button:hover {
+    -fx-background-color: #205e40;
+}
+
+.button:pressed {
+    -fx-background-color: #184b32;
+}
+
+.button:focused {
+    -fx-border-color: #b5dec6;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
 }
 
 .input-bar {
-    -fx-background-color: rgba(243, 250, 247, 0.88);
-    -fx-padding: 10px;
+    -fx-background-color: #f7faf5;
+    -fx-border-color: #b5d5c3 transparent transparent transparent;
+    -fx-border-width: 1px 0 0 0;
+    -fx-padding: 12px 10px 13px 10px;
 }
 
 .identity-bar {

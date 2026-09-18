@@ -150,7 +150,7 @@ public class Ui {
     private void showNumberedTasks(Iterable<Task> tasks) {
         int taskNumber = 1;
         for (Task task : tasks) {
-            output.println(INDENT + taskNumber + "." + task);
+            output.println(INDENT + taskNumber + ". " + task);
             taskNumber++;
         }
     }
@@ -194,7 +194,7 @@ public class Ui {
      * @param task matching task.
      */
     public void showNumberedTask(int number, Task task) {
-        output.println(INDENT + number + "." + task);
+        output.println(INDENT + number + ". " + task);
     }
 
     /**

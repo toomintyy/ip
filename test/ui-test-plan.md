@@ -107,6 +107,18 @@ Goodbye uses the waving mascot and disables input. Earlier bubbles keep their
 original expressions. All avatars have transparent backgrounds and fit the
 existing avatar space; the identity bar keeps the original mascot.
 
+### GUI9: Friendly input and spacing
+
+1. Focus the empty input field and inspect its hint and green outline.
+2. Add a task with Enter and another with Send, then enter `list`.
+3. Resize to the minimum window size, navigate with Tab, and enter `bye`.
+
+Expected: The hint reads "What’s next? Try todo read a book". Focus has a
+clear green outline; Send has hover, pressed, and keyboard-focus feedback.
+Messages have comfortable padding and line spacing; task numbers are followed
+by a space. The input and button fit without overlapping the conversation.
+Both submission methods clear the field, and goodbye disables both controls.
+
 ## TC1: Add, mark, and list all task types
 
 Aim: Verify that todos, deadlines, and events are created with the correct details, retain their types when marked, and appear correctly in the task list.
@@ -156,9 +168,9 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Let's check your lineup! Here are your tasks:
-  1.[T][ ] borrow book
-  2.[D][X] do homework (by: Dec 02 2019)
-  3.[E][ ] project meeting (from: Dec 03 2019 to: Dec 04 2019)
+  1. [T][ ] borrow book
+  2. [D][X] do homework (by: Dec 02 2019)
+  3. [E][ ] project meeting (from: Dec 03 2019 to: Dec 04 2019)
 ____________________________________________________________
 ____________________________________________________________
   Stay fresh! Catch you next time!
@@ -228,8 +240,8 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Let's check your lineup! Here are your tasks:
-  1.[T][ ] first
-  2.[E][X] third (from: Dec 09 2019 to: Dec 10 2019)
+  1. [T][ ] first
+  2. [E][X] third (from: Dec 09 2019 to: Dec 10 2019)
 ____________________________________________________________
 ____________________________________________________________
   Making room! I've removed:
@@ -375,8 +387,8 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Let's check your lineup! Here are your tasks:
-  1.[D][ ] submit report (by: Oct 15 2019)
-  2.[E][ ] orientation week (from: Oct 04 2019 to: Oct 11 2019)
+  1. [D][ ] submit report (by: Oct 15 2019)
+  2. [E][ ] orientation week (from: Oct 04 2019 to: Oct 11 2019)
 ____________________________________________________________
 ____________________________________________________________
   Stay fresh! Catch you next time!
@@ -427,7 +439,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Let's check your lineup! Here are your tasks:
-  1.[D][ ] valid report (by: Dec 09 2019)
+  1. [D][ ] valid report (by: Dec 09 2019)
 ____________________________________________________________
 ____________________________________________________________
   Stay fresh! Catch you next time!
@@ -490,7 +502,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Let's check your lineup! Here are your tasks:
-  1.[E][ ] valid meeting (from: Dec 09 2019 to: Dec 10 2019)
+  1. [E][ ] valid meeting (from: Dec 09 2019 to: Dec 10 2019)
 ____________________________________________________________
 ____________________________________________________________
   Stay fresh! Catch you next time!
@@ -583,9 +595,9 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Let's check your lineup! Here are your tasks:
-  1.[T][ ] trimmed task
-  2.[D][ ] report (by: Nov 01 2019)
-  3.[E][ ] trip (from: Nov 02 2019 to: Nov 03 2019)
+  1. [T][ ] trimmed task
+  2. [D][ ] report (by: Nov 01 2019)
+  3. [E][ ] trip (from: Nov 02 2019 to: Nov 03 2019)
 ____________________________________________________________
 ____________________________________________________________
   Stay fresh! Catch you next time!
@@ -680,9 +692,9 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Let's check your lineup! Here are your tasks:
-  1.[T][X] read book
-  2.[D][ ] return book (by: Jun 06 2019)
-  3.[E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
+  1. [T][X] read book
+  2. [D][ ] return book (by: Jun 06 2019)
+  3. [E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
 ____________________________________________________________
 ____________________________________________________________
   Stay fresh! Catch you next time!
@@ -715,8 +727,8 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Let's check your lineup! Here are your tasks:
-  1.[T][X] compare | alternatives
-  2.[D][ ] use C:\temp (by: Dec 06 2019)
+  1. [T][X] compare | alternatives
+  2. [D][ ] use C:\temp (by: Dec 06 2019)
 ____________________________________________________________
 ____________________________________________________________
   Stay fresh! Catch you next time!
@@ -949,7 +961,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Let's check your lineup! Here are your tasks:
-  1.[D][ ] leap day (by: Feb 29 2020)
+  1. [D][ ] leap day (by: Feb 29 2020)
 ____________________________________________________________
 ____________________________________________________________
   Stay fresh! Catch you next time!
@@ -1046,20 +1058,20 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Here's your lineup for Oct 15 2019:
-  1.[D][ ] due task (by: Oct 15 2019)
-  2.[E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
+  1. [D][ ] due task (by: Oct 15 2019)
+  2. [E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
 ____________________________________________________________
 ____________________________________________________________
   Here's your lineup for Oct 14 2019:
-  1.[E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
+  1. [E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
 ____________________________________________________________
 ____________________________________________________________
   Here's your lineup for Oct 16 2019:
-  1.[E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
+  1. [E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
 ____________________________________________________________
 ____________________________________________________________
   Here's your lineup for Oct 17 2019:
-  1.[D][X] later task (by: Oct 17 2019)
+  1. [D][X] later task (by: Oct 17 2019)
 ____________________________________________________________
 ____________________________________________________________
   Here's your lineup for Oct 18 2019:
@@ -1128,9 +1140,9 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Found some fresh matches! Here's what matches your search:
-  1.[T][X] read book
-  2.[D][ ] return book (by: Dec 02 2019)
-  3.[E][ ] book club (from: Dec 03 2019 to: Dec 04 2019)
+  1. [T][X] read book
+  2. [D][ ] return book (by: Dec 02 2019)
+  3. [E][ ] book club (from: Dec 03 2019 to: Dec 04 2019)
 ____________________________________________________________
 ____________________________________________________________
   No matches this time! Give another keyword a go.
