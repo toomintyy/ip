@@ -63,7 +63,7 @@ public class Minty {
         try {
             command.execute(tasks, responseUi, storage);
             if (command.isExit()) {
-                responseUi.showMessage("Bye. Hope to see you again soon!");
+                responseUi.showMessage("Stay fresh! Catch you next time!");
             }
         } catch (MintyException exception) {
             responseUi.showError(exception.getMessage());
@@ -128,7 +128,8 @@ public class Minty {
         try {
             return new TaskList(storage.loadTasks());
         } catch (IOException | MintyException exception) {
-            ui.showError("I couldn't load the tasks: " + exception.getMessage());
+            ui.showError("I've hit a snag loading your saved tasks. Starting with an empty list for"
+                    + " this session. Details: " + exception.getMessage());
             return new TaskList();
         }
     }

@@ -36,6 +36,6 @@ public class UnmarkCommand extends IndexedTaskCommand {
      */
     @Override
     protected String getConfirmationMessage() {
-        return "OK, I've marked this task as not done yet:";
+        return "Ready for another round! Marked as not done:";
     }
 }

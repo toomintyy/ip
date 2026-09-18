@@ -34,7 +34,7 @@ public abstract class AddCommand extends Command {
         Task task = createTask(fullCommand);
         tasks.add(task);
         saveTasks(tasks, ui, storage);
-        ui.showTask("Got it. I've added this task:", task);
+        ui.showTask("Fresh task coming right up! I've added:", task);
         ui.showTaskCount(tasks.size());
     }
 

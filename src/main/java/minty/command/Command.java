@@ -42,7 +42,8 @@ public abstract class Command {
         try {
             storage.saveTasks(tasks);
         } catch (IOException exception) {
-            ui.showError("I couldn't save the tasks: " + exception.getMessage());
+            ui.showError("I've hit a snag saving your tasks. Your changes are in this session, but"
+                    + " couldn't be saved to the file. Details: " + exception.getMessage());
         }
     }
 }

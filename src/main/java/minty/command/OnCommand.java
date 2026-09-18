@@ -39,7 +39,7 @@ public class OnCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws MintyException {
         LocalDate date = Parser.parseOnDate(fullCommand);
-        ui.showMessage("Here are the tasks occurring on "
+        ui.showMessage("Here's your lineup for "
                 + date.format(DISPLAY_DATE_FORMAT) + ":");
 
         int matchCount = 0;
@@ -48,7 +48,7 @@ public class OnCommand extends Command {
             ui.showNumberedTask(matchCount, task);
         }
         if (matchCount == 0) {
-            ui.showMessage("There are no deadlines or events on this date.");
+            ui.showMessage("No deadlines or events on this date. A little breathing room!");
         }
     }
 }

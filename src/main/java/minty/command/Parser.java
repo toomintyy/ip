@@ -93,18 +93,19 @@ public final class Parser {
         String commandWord = commandType.getCommandWord();
         String taskNumber = getCommandArguments(command, commandType);
         if (taskNumber.isEmpty()) {
-            throw new MintyException("Please provide a task number to " + commandWord + ".");
+            throw new MintyException("Which task? Add a number after " + commandWord
+                    + ", like " + commandWord + " 1.");
         }
 
         int taskIndex;
         try {
             taskIndex = Integer.parseInt(taskNumber) - 1;
         } catch (NumberFormatException exception) {
-            throw new MintyException("The task number must be a whole number.");
+            throw new MintyException("Whoops! Use a whole number for the task, like " + commandWord + " 1.");
         }
 
         if (taskIndex < 0 || taskIndex >= taskCount) {
-            throw new MintyException("That task number is not in your list.");
+            throw new MintyException("I can't spot that task number! Type list to check your task numbers.");
         }
         assert taskIndex >= 0 && taskIndex < taskCount
                 : "Validated task index must be within the task list";
@@ -121,7 +122,7 @@ public final class Parser {
     public static Todo parseTodo(String command) throws MintyException {
         String description = getCommandArguments(command, CommandType.TODO);
         if (description.isEmpty()) {
-            throw new MintyException("Hmm, a todo needs a description.");
+            throw new MintyException("Let's give that task a name! Try todo read a book.");
         }
         return new Todo(description);
     }
@@ -137,7 +138,7 @@ public final class Parser {
         String details = getCommandArguments(command, CommandType.DEADLINE);
         int bySeparator = details.indexOf("/by");
         if (bySeparator < 0) {
-            throw new MintyException("A deadline needs a /by date or time.");
+            throw new MintyException("Let's give that deadline a date! Try deadline submit report /by 2026-09-18.");
         }
         assert bySeparator >= 0
                 : "A deadline separator must exist before extracting its fields";
@@ -145,10 +146,10 @@ public final class Parser {
         String description = details.substring(0, bySeparator).trim();
         String byText = details.substring(bySeparator + "/by".length()).trim();
         if (description.isEmpty()) {
-            throw new MintyException("Hmm, a deadline needs a description.");
+            throw new MintyException("What's due? Add a description before /by.");
         }
         if (byText.isEmpty()) {
-            throw new MintyException("Please say when the deadline is due after /by.");
+            throw new MintyException("When's it due? Add a date after /by, like 2026-09-18.");
         }
         LocalDate by = parseDate(byText, "deadline");
         return new Deadline(description, by);
@@ -167,13 +168,13 @@ public final class Parser {
         int toSeparator = details.indexOf("/to");
 
         if (toSeparator >= 0 && (fromSeparator < 0 || toSeparator < fromSeparator)) {
-            throw new MintyException("Put /from before /to when adding an event.");
+            throw new MintyException("Start first, finish second! Put /from before /to.");
         }
         if (fromSeparator < 0) {
-            throw new MintyException("An event needs a /from date or time.");
+            throw new MintyException("When does it start? Add /from followed by a date, like /from 2026-09-18.");
         }
         if (toSeparator < 0) {
-            throw new MintyException("An event needs a /to date or time.");
+            throw new MintyException("When does it wrap up? Add /to followed by a date, like /to 2026-09-19.");
         }
         assert fromSeparator >= 0 && toSeparator > fromSeparator
                 : "Event separators must be ordered before extracting their fields";
@@ -182,18 +183,19 @@ public final class Parser {
         String fromText = details.substring(fromSeparator + "/from".length(), toSeparator).trim();
         String toText = details.substring(toSeparator + "/to".length()).trim();
         if (description.isEmpty()) {
-            throw new MintyException("Hmm, an event needs a description.");
+            throw new MintyException("What's the occasion? Add a description before /from.");
         }
         if (fromText.isEmpty()) {
-            throw new MintyException("Please say when the event starts after /from.");
+            throw new MintyException("Let's set the start! Add a date after /from, like 2026-09-18.");
         }
         if (toText.isEmpty()) {
-            throw new MintyException("Please say when the event ends after /to.");
+            throw new MintyException("Let's set the finish! Add a date after /to, like 2026-09-19.");
         }
         LocalDate from = parseDate(fromText, "event start");
         LocalDate to = parseDate(toText, "event end");
         if (to.isBefore(from)) {
-            throw new MintyException("The event end date cannot be before its start date.");
+            throw new MintyException("Whoops! The event ends before it starts. Set the end date to"
+                    + " the start date or later.");
         }
         return new Event(description, from, to);
     }
@@ -208,7 +210,7 @@ public final class Parser {
     public static LocalDate parseOnDate(String command) throws MintyException {
         String dateText = getCommandArguments(command, CommandType.ON);
         if (dateText.isEmpty()) {
-            throw new MintyException("Please provide a date after on.");
+            throw new MintyException("Which day are we checking? Try on 2026-09-18.");
         }
         return parseDate(dateText, "requested");
     }
@@ -223,7 +225,7 @@ public final class Parser {
     public static String parseFindKeyword(String command) throws MintyException {
         String keyword = getCommandArguments(command, CommandType.FIND);
         if (keyword.isEmpty()) {
-            throw new MintyException("Please provide a keyword to find.");
+            throw new MintyException("What are we looking for? Add a keyword, like find book.");
         }
         return keyword;
     }
@@ -251,7 +253,8 @@ public final class Parser {
         try {
             return LocalDate.parse(dateText);
         } catch (DateTimeParseException exception) {
-            throw new MintyException("Please use yyyy-MM-dd for the " + dateName + " date.");
+            throw new MintyException("That " + dateName + " date doesn't look right!"
+                    + " Use a valid date in yyyy-MM-dd format, like 2026-09-18.");
         }
     }
 }

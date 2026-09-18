@@ -71,8 +71,8 @@ public class Ui {
         output.println(DIVIDER);
         output.print(BANNER);
         printLines(
-                INDENT + "Heyyy! I'm Feeling Minty.",
-                INDENT + "What can I do for you today?",
+                INDENT + "Heyyy! I'm Minty, your fresh little task buddy!",
+                INDENT + "Let's get things moving. What's on your list today?",
                 DIVIDER);
     }
 
@@ -82,7 +82,7 @@ public class Ui {
     public void showGoodbye() {
         printLines(
                 DIVIDER,
-                INDENT + "Bye. Hope to see you again soon!",
+                INDENT + "Stay fresh! Catch you next time!",
                 DIVIDER);
     }
 
@@ -108,7 +108,11 @@ public class Ui {
      * @param tasks tasks to show.
      */
     public void showTaskList(Iterable<Task> tasks) {
-        output.println(INDENT + "Here are the tasks in your list:");
+        if (!tasks.iterator().hasNext()) {
+            showMessage("A fresh start! Your list is empty. Try todo read a book to get going.");
+            return;
+        }
+        output.println(INDENT + "Let's check your lineup! Here are your tasks:");
         showNumberedTasks(tasks);
     }
 
@@ -118,7 +122,11 @@ public class Ui {
      * @param tasks matching tasks to show.
      */
     public void showMatchingTasks(Iterable<Task> tasks) {
-        output.println(INDENT + "Here are the matching tasks in your list:");
+        if (!tasks.iterator().hasNext()) {
+            showMessage("No matches this time! Give another keyword a go.");
+            return;
+        }
+        output.println(INDENT + "Found some fresh matches! Here's what matches your search:");
         showNumberedTasks(tasks);
     }
 
@@ -154,8 +162,8 @@ public class Ui {
      */
     public void showTaskCount(int taskCount) {
         String taskNoun = taskCount == 1 ? "task" : "tasks";
-        output.println(INDENT + "Now you have " + taskCount + " "
-                + taskNoun + " in the list.");
+        output.println(INDENT + "Your list now has " + taskCount + " "
+                + taskNoun + ".");
     }
 
     /**

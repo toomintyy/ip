@@ -20,6 +20,7 @@ public class UnknownCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws MintyException {
-        throw new MintyException("Sorry, I don't understand that command.");
+        throw new MintyException("Whoops! I don't recognize that command. Try list to see your"
+                + " tasks or todo read a book to add one.");
     }
 }

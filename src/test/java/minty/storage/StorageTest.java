@@ -73,7 +73,7 @@ public class StorageTest {
 
         MintyException exception = assertThrows(MintyException.class, () -> new Storage(file).loadTasks());
 
-        assertEquals("Invalid data on line 2: unknown task type 'X'.",
+        assertEquals("I couldn't read the saved task on line 2: unknown task type 'X'.",
                 exception.getMessage());
     }
 

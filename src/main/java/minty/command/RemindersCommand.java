@@ -34,12 +34,12 @@ public class RemindersCommand extends Command {
      * @param ui response destination.
      */
     public static void showReminders(List<TaskList.NumberedTask> reminders, Ui ui) {
-        ui.showMessage("Here are your reminders for today and the next 6 days:");
+        ui.showMessage("Heads up! Here are your reminders for today and the next 6 days:");
         for (TaskList.NumberedTask reminder : reminders) {
             ui.showNumberedTask(reminder.number(), reminder.task());
         }
         if (reminders.isEmpty()) {
-            ui.showMessage("There are no incomplete deadlines or events in this period.");
+            ui.showMessage("No incomplete deadlines or events in this period. Stay fresh!");
         }
     }
 }

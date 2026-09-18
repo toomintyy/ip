@@ -37,7 +37,7 @@ public class DeleteCommand extends IndexedTaskCommand {
      */
     @Override
     protected String getConfirmationMessage() {
-        return "Noted. I've removed this task:";
+        return "Making room! I've removed:";
     }
 
     /**

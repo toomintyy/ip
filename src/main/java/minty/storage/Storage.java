@@ -263,6 +263,6 @@ public class Storage {
      * @return Minty-specific exception.
      */
     private MintyException invalidLine(int lineNumber, String reason) {
-        return new MintyException("Invalid data on line " + lineNumber + ": " + reason + ".");
+        return new MintyException("I couldn't read the saved task on line " + lineNumber + ": " + reason + ".");
     }
 }

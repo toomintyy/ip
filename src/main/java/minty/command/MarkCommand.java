@@ -36,6 +36,6 @@ public class MarkCommand extends IndexedTaskCommand {
      */
     @Override
     protected String getConfirmationMessage() {
-        return "Nice! I've marked this task as done:";
+        return "Woohoo! Marked as done:";
     }
 }
