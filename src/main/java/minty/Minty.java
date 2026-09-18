@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import minty.command.Command;
+import minty.command.MarkCommand;
 import minty.command.Parser;
 import minty.command.RemindersCommand;
 import minty.exception.MintyException;
@@ -55,6 +56,16 @@ public class Minty {
      * @return Minty's response without command-line dividers.
      */
     public String getResponse(String input) {
+        return getChatResponse(input).text();
+    }
+
+    /**
+     * Executes a command once and pairs its response with the mascot's expression.
+     *
+     * @param input complete command entered by the user.
+     * @return response text and expression based on the execution outcome.
+     */
+    public ChatResponse getChatResponse(String input) {
         ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
         PrintStream responseOutput = new PrintStream(responseBuffer, true, StandardCharsets.UTF_8);
         Ui responseUi = new Ui(responseOutput);
@@ -70,10 +81,33 @@ public class Minty {
         }
 
         String response = responseBuffer.toString(StandardCharsets.UTF_8);
-        if (command instanceof RemindersCommand) {
-            return response.stripTrailing().stripIndent().strip();
+        String text = command instanceof RemindersCommand
+                ? response.stripTrailing().stripIndent().strip() : response.stripIndent().strip();
+        Expression expression = Expression.DEFAULT;
+        if (responseUi.hasError()) {
+            expression = Expression.CURIOUS;
+        } else if (command.isExit()) {
+            expression = Expression.WAVING;
+        } else if (command instanceof MarkCommand) {
+            expression = Expression.CELEBRATING;
         }
-        return response.stripIndent().strip();
+        return new ChatResponse(text, expression);
+    }
+
+    /**
+     * Identifies the mascot reaction associated with a command outcome.
+     */
+    public enum Expression {
+        DEFAULT, CELEBRATING, CURIOUS, WAVING
+    }
+
+    /**
+     * Keeps each message and its expression together so older messages retain their reaction.
+     *
+     * @param text response shown in the chat bubble.
+     * @param expression mascot reaction for this response.
+     */
+    public record ChatResponse(String text, Expression expression) {
     }
 
     /**

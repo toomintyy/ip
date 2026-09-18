@@ -23,6 +23,8 @@ public class Ui {
                     + "██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║\n"
                     + "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝\n";
 
+    private boolean hasError;
+
     private final Scanner scanner;
     private final PrintStream output;
 
@@ -99,7 +101,17 @@ public class Ui {
      * @param message error details to show.
      */
     public void showError(String message) {
+        hasError = true;
         output.println(INDENT + message);
+    }
+
+    /**
+     * Reports whether this response includes an error, including a failed save.
+     *
+     * @return whether an error was displayed.
+     */
+    public boolean hasError() {
+        return hasError;
     }
 
     /**

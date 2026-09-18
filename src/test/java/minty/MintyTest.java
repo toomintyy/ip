@@ -29,6 +29,36 @@ public class MintyTest {
     private Path temporaryDirectory;
 
     @Test
+    public void getChatResponse_commandOutcomes_selectExpressionsAndPreserveEarlierResponse() {
+        Minty minty = new Minty(temporaryDirectory.resolve("tasks.txt"));
+        assertEquals(Minty.Expression.DEFAULT, minty.getChatResponse("todo read book").expression());
+        Minty.ChatResponse completed = minty.getChatResponse("mark 1");
+        assertEquals(Minty.Expression.CELEBRATING, completed.expression());
+        assertTrue(completed.text().contains("[T][X] read book"));
+        assertEquals(Minty.Expression.CURIOUS, minty.getChatResponse("mark 99").expression());
+        assertEquals(Minty.Expression.CURIOUS, minty.getChatResponse("unknown").expression());
+        assertEquals(Minty.Expression.DEFAULT, minty.getChatResponse("unmark 1").expression());
+        assertEquals(Minty.Expression.DEFAULT, minty.getChatResponse("list").expression());
+        assertEquals(Minty.Expression.WAVING, minty.getChatResponse("bye").expression());
+        assertEquals(Minty.Expression.CELEBRATING, completed.expression());
+        assertTrue(completed.text().contains("[T][X] read book"));
+    }
+
+    @Test
+    public void getChatResponse_failedSave_usesCuriousInsteadOfCelebrating() throws IOException {
+        Path file = temporaryDirectory.resolve("tasks.txt");
+        Minty minty = new Minty(file);
+        minty.getChatResponse("todo read book");
+        Files.delete(file);
+        Files.createDirectory(file);
+
+        Minty.ChatResponse response = minty.getChatResponse("mark 1");
+
+        assertEquals(Minty.Expression.CURIOUS, response.expression());
+        assertTrue(response.text().contains("couldn't be saved"));
+    }
+
+    @Test
     public void getResponse_emptyListThenDeleteLastTask_showsFreshStart() {
         Minty minty = new Minty(temporaryDirectory.resolve("tasks.txt"));
         String empty = "A fresh start! Your list is empty. Try todo read a book to get going.";

@@ -28,6 +28,11 @@ public class MainWindow extends AnchorPane {
     private final Image userImage = new Image(getClass().getResourceAsStream("/images/user-avatar.png"));
     private final Image mintyImage = new Image(getClass().getResourceAsStream("/images/minty-avatar.png"));
 
+    private final Image celebratingImage = new Image(
+            getClass().getResourceAsStream("/images/minty-celebrating.png"));
+    private final Image curiousImage = new Image(getClass().getResourceAsStream("/images/minty-curious.png"));
+    private final Image wavingImage = new Image(getClass().getResourceAsStream("/images/minty-waving.png"));
+
     private Minty minty;
 
     /**
@@ -65,10 +70,10 @@ public class MainWindow extends AnchorPane {
             return;
         }
 
-        String response = minty.getResponse(input);
+        Minty.ChatResponse response = minty.getChatResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getMintyDialog(response, mintyImage));
+                DialogBox.getMintyDialog(response.text(), getExpressionImage(response.expression())));
         userInput.clear();
 
         if (input.equals("bye")) {
@@ -76,4 +81,19 @@ public class MainWindow extends AnchorPane {
             sendButton.setDisable(true);
         }
     }
+    /**
+     * Selects the cached avatar for one response without changing earlier bubbles.
+     *
+     * @param expression reaction reported by the chatbot.
+     * @return matching mascot image.
+     */
+    private Image getExpressionImage(Minty.Expression expression) {
+        return switch (expression) {
+            case DEFAULT -> mintyImage;
+            case CELEBRATING -> celebratingImage;
+            case CURIOUS -> curiousImage;
+            case WAVING -> wavingImage;
+        };
+    }
+
 }

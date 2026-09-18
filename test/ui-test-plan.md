@@ -95,6 +95,18 @@ Minty's cream bubbles have green outlines and small tails pointing toward the
 mascot; user bubbles are pale mint. Text wraps without clipping, and the header
 and input remain separate from the conversation at every supported size.
 
+### GUI8: Expressive mascot avatars
+
+1. Add `todo read book`, then enter `mark 1`.
+2. Enter `mark 99`, then `list`, then `bye`.
+3. Inspect the avatars alongside each response.
+
+Expected: The add and list responses use the original mascot. Successful marking
+uses the celebrating mascot. The invalid task number uses the curious mascot.
+Goodbye uses the waving mascot and disables input. Earlier bubbles keep their
+original expressions. All avatars have transparent backgrounds and fit the
+existing avatar space; the identity bar keeps the original mascot.
+
 ## TC1: Add, mark, and list all task types
 
 Aim: Verify that todos, deadlines, and events are created with the correct details, retain their types when marked, and appear correctly in the task list.
