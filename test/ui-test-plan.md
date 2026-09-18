@@ -83,6 +83,18 @@ Expected: Minty shows its goodbye message and disables the command field and Sen
 Expected: The botanical mint background fills the window. Minty's leaf mascot appears to the left of its messages,
 and the user avatar appears to the right of user messages without obscuring the message text.
 
+### GUI7: Identity bar and themed bubbles
+
+1. Start Minty and inspect the header and greeting.
+2. Send `list`, then an invalid command, and scroll through the conversation.
+3. Resize the window down to its minimum size and then enlarge it.
+
+Expected: A fixed cream header shows the mascot, green Minty title, and
+"Your fresh little task buddy" subtitle. The conversation scrolls below it.
+Minty's cream bubbles have green outlines and small tails pointing toward the
+mascot; user bubbles are pale mint. Text wraps without clipping, and the header
+and input remain separate from the conversation at every supported size.
+
 ## TC1: Add, mark, and list all task types
 
 Aim: Verify that todos, deadlines, and events are created with the correct details, retain their types when marked, and appear correctly in the task list.

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -13,9 +16,23 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="minty.ui.MainWindow">
     <children>
+        <HBox alignment="CENTER_LEFT" spacing="12.0" prefHeight="68.0" styleClass="identity-bar"
+              AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <ImageView fitWidth="44.0" fitHeight="44.0" preserveRatio="true">
+                    <image><Image url="@../images/minty-avatar.png" /></image>
+                </ImageView>
+                <VBox alignment="CENTER_LEFT" spacing="2.0">
+                    <children>
+                        <Label text="Minty" styleClass="identity-title" />
+                        <Label text="Your fresh little task buddy" styleClass="identity-subtitle" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
         <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER"
                     AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="68.0">
             <content>
                 <VBox fx:id="dialogContainer" fillWidth="true" spacing="8.0"
                       styleClass="dialog-container" />

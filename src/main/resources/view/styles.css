@@ -29,12 +29,14 @@
 }
 
 .user-message {
-    -fx-background-color: rgba(205, 238, 224, 0.94);
+    -fx-background-color: #d5efe2;
+    -fx-text-fill: #243e32;
 }
 
 .minty-message {
-    -fx-background-color: rgba(255, 255, 255, 0.94);
-    -fx-border-color: #b6d7ca;
+    -fx-background-color: #fbfcf2;
+    -fx-text-fill: #243e32;
+    -fx-border-color: #6aa889;
     -fx-border-radius: 12px;
 }
 
@@ -54,4 +56,28 @@
 .input-bar {
     -fx-background-color: rgba(243, 250, 247, 0.88);
     -fx-padding: 10px;
+}
+
+.identity-bar {
+    -fx-background-color: #f7faf5;
+    -fx-border-color: transparent transparent #87b99b transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 10px 16px;
+}
+
+.identity-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #205e40;
+}
+
+.identity-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #42775b;
+}
+
+.minty-tail {
+    -fx-fill: #fbfcf2;
+    -fx-stroke: #6aa889;
+    -fx-stroke-width: 1px;
 }

@@ -5,6 +5,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Polygon;
 
 /**
  * Displays one message from either the user or Minty.
@@ -30,7 +32,15 @@ public class DialogBox extends HBox {
         if (isUser) {
             getChildren().addAll(message, displayPicture);
         } else {
-            getChildren().addAll(displayPicture, message);
+            // Place the tail behind the bubble so its inner edge is hidden by the label.
+            Polygon tail = new Polygon(0, 0, 12, 0, 12, 12);
+            tail.getStyleClass().add("minty-tail");
+            tail.setTranslateX(-6);
+            tail.setTranslateY(14);
+            StackPane bubble = new StackPane(tail, message);
+            bubble.setAlignment(Pos.TOP_LEFT);
+            bubble.setMaxWidth(MAX_MESSAGE_WIDTH);
+            getChildren().addAll(displayPicture, bubble);
         }
     }
 
