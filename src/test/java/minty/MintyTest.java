@@ -29,6 +29,21 @@ public class MintyTest {
     private Path temporaryDirectory;
 
     @Test
+    public void getChatResponse_responseTypes_reflectOutcomesWithoutMatchingTaskText() {
+        Minty minty = new Minty(temporaryDirectory.resolve("tasks.txt"));
+        assertEquals(Minty.ResponseType.SUCCESS,
+                minty.getChatResponse("todo Whoops! Needs attention").type());
+        assertEquals(Minty.ResponseType.NORMAL, minty.getChatResponse("list").type());
+        assertEquals(Minty.ResponseType.SUCCESS, minty.getChatResponse("mark 1").type());
+        assertEquals(Minty.ResponseType.SUCCESS, minty.getChatResponse("unmark 1").type());
+        assertEquals(Minty.ResponseType.ERROR, minty.getChatResponse("mark 99").type());
+        assertEquals(Minty.ResponseType.ERROR, minty.getChatResponse("unknown").type());
+        assertEquals(Minty.ResponseType.REMINDER, minty.getChatResponse("reminders").type());
+        assertEquals(Minty.ResponseType.SUCCESS, minty.getChatResponse("delete 1").type());
+        assertEquals(Minty.ResponseType.NORMAL, minty.getChatResponse("bye").type());
+    }
+
+    @Test
     public void getChatResponse_commandOutcomes_selectExpressionsAndPreserveEarlierResponse() {
         Minty minty = new Minty(temporaryDirectory.resolve("tasks.txt"));
         assertEquals(Minty.Expression.DEFAULT, minty.getChatResponse("todo read book").expression());
@@ -55,6 +70,7 @@ public class MintyTest {
         Minty.ChatResponse response = minty.getChatResponse("mark 1");
 
         assertEquals(Minty.Expression.CURIOUS, response.expression());
+        assertEquals(Minty.ResponseType.ERROR, response.type());
         assertTrue(response.text().contains("couldn't be saved"));
     }
 

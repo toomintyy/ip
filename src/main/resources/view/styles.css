@@ -122,3 +122,37 @@
     -fx-stroke: #6aa889;
     -fx-stroke-width: 1px;
 }
+
+/* Match bubble tails to the outcome colors as well as the message background. */
+.response-error .minty-message {
+    -fx-background-color: #fce8e6;
+    -fx-border-color: #bd554e;
+    -fx-text-fill: #792b26;
+}
+
+.response-error .minty-tail {
+    -fx-fill: #fce8e6;
+    -fx-stroke: #bd554e;
+}
+
+.response-success .minty-message {
+    -fx-background-color: #e4f4e8;
+    -fx-border-color: #619b73;
+    -fx-text-fill: #234c30;
+}
+
+.response-success .minty-tail {
+    -fx-fill: #e4f4e8;
+    -fx-stroke: #619b73;
+}
+
+.response-reminder .minty-message {
+    -fx-background-color: #e6f2f8;
+    -fx-border-color: #669bb5;
+    -fx-text-fill: #254d61;
+}
+
+.response-reminder .minty-tail {
+    -fx-fill: #e6f2f8;
+    -fx-stroke: #669bb5;
+}

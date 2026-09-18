@@ -9,7 +9,9 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 
+import minty.command.AddCommand;
 import minty.command.Command;
+import minty.command.IndexedTaskCommand;
 import minty.command.MarkCommand;
 import minty.command.Parser;
 import minty.command.RemindersCommand;
@@ -91,7 +93,15 @@ public class Minty {
         } else if (command instanceof MarkCommand) {
             expression = Expression.CELEBRATING;
         }
-        return new ChatResponse(text, expression);
+        ResponseType type = ResponseType.NORMAL;
+        if (responseUi.hasError()) {
+            type = ResponseType.ERROR;
+        } else if (command instanceof RemindersCommand) {
+            type = ResponseType.REMINDER;
+        } else if (command instanceof AddCommand || command instanceof IndexedTaskCommand) {
+            type = ResponseType.SUCCESS;
+        }
+        return new ChatResponse(text, expression, type);
     }
 
     /**
@@ -102,12 +112,20 @@ public class Minty {
     }
 
     /**
+     * Describes the outcome for visual styling independently of response wording.
+     */
+    public enum ResponseType {
+        NORMAL, SUCCESS, REMINDER, ERROR
+    }
+
+    /**
      * Keeps each message and its expression together so older messages retain their reaction.
      *
      * @param text response shown in the chat bubble.
      * @param expression mascot reaction for this response.
+     * @param type outcome used to style the chat bubble.
      */
-    public record ChatResponse(String text, Expression expression) {
+    public record ChatResponse(String text, Expression expression, ResponseType type) {
     }
 
     /**

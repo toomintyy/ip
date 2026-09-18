@@ -138,6 +138,18 @@ Expected: A thin muted-green horizontal divider appears below each message,
 inset from the window edges, with space between the line and the bubble or
 avatar. Lines span the conversation width regardless of bubble length.
 
+### GUI12: Response colors and error emphasis
+
+1. Add a task, mark it, and enter `list`.
+2. Enter an invalid command and an invalid task number.
+3. Enter `reminders`, then another valid command.
+
+Expected: Successful task changes use pale green bubbles; list/search and
+ordinary conversation use cream; reminders use pale blue. Errors use soft red
+with dark-red text and a "Needs attention" heading. Speech tails match each
+bubble. Subsequent responses use their own colors, and old bubbles stay unchanged.
+Startup reminders also use pale blue. Save failures take priority over success.
+
 ## TC1: Add, mark, and list all task types
 
 Aim: Verify that todos, deadlines, and events are created with the correct details, retain their types when marked, and appear correctly in the task list.

@@ -61,7 +61,8 @@ public class MainWindow extends AnchorPane {
         userInput.requestFocus();
         String reminders = minty.getStartupReminders();
         if (!reminders.isEmpty()) {
-            dialogContainer.getChildren().add(DialogBox.getMintyDialog(reminders, mintyImage));
+            dialogContainer.getChildren().add(
+                    DialogBox.getMintyDialog(reminders, mintyImage, Minty.ResponseType.REMINDER));
         }
     }
 
@@ -78,7 +79,7 @@ public class MainWindow extends AnchorPane {
         Minty.ChatResponse response = minty.getChatResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getMintyDialog(response.text(), getExpressionImage(response.expression())));
+                DialogBox.getMintyDialog(response.text(), getExpressionImage(response.expression()), response.type()));
         userInput.clear();
 
         if (input.equals("bye")) {
