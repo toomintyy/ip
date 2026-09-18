@@ -89,11 +89,6 @@ public class Storage {
                 continue;
             }
             Task task = parseTask(taskData, lineNumber);
-            for (Task existing : tasks) {
-                if (existing.hasSameDetails(task)) {
-                    throw invalidLine(lineNumber, "duplicate task details");
-                }
-            }
             tasks.add(task);
         }
         return tasks;

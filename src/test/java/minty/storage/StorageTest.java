@@ -31,6 +31,23 @@ public class StorageTest {
     private Path temporaryDirectory;
 
     @Test
+    public void loadTasks_legacyDuplicates_preservesEveryTaskAndAllowsSaving() throws IOException, MintyException {
+        Path file = temporaryDirectory.resolve("tasks.txt");
+        Files.writeString(file, "T | 0 | same\nT | 1 | same\nT | 0 | same\nD | 0 | work | 2026-09-20");
+        Storage storage = new Storage(file);
+
+        ArrayList<Task> tasks = storage.loadTasks();
+
+        assertEquals(4, tasks.size());
+        assertEquals("T | 0 | same", tasks.get(0).toDataString());
+        assertEquals("T | 1 | same", tasks.get(1).toDataString());
+        assertEquals("T | 0 | same", tasks.get(2).toDataString());
+        storage.saveTasks(tasks);
+        assertEquals(tasks.stream().map(Task::toDataString).toList(),
+                new Storage(file).loadTasks().stream().map(Task::toDataString).toList());
+    }
+
+    @Test
     public void saveTasks_readOnlyFile_reportsErrorAndPreservesData() throws IOException {
         Path file = temporaryDirectory.resolve("tasks.txt");
         Files.writeString(file, "T | 0 | keep");
@@ -68,7 +85,7 @@ public class StorageTest {
 
     @Test
     public void loadTasks_badData_blocksLaterWritesAndPreservesOriginal() throws IOException {
-        for (String original : new String[] {"bad data", "T | 0 | same\nT | 1 | same"}) {
+        for (String original : new String[] {"bad data", "T | 2 | invalid status"}) {
             Path file = temporaryDirectory.resolve("tasks.txt");
             Files.writeString(file, original);
             Storage storage = new Storage(file);

@@ -160,6 +160,15 @@ fading smoothly to richer foliage at both edges. The wash stays fixed behind
 the scrolling messages and adapts to the viewport width. Avatars, bubbles,
 header, input controls, and text retain their normal colors and opacity.
 
+### GUI15: Existing duplicate tasks
+
+Start Minty with a saved file containing duplicate task details, including
+completed copies. Enter `list` and add a different task.
+
+Expected: Every saved task loads in its original order and status, saving
+continues normally, and no corruption warning appears. Adding another copy
+of an existing task still reports the duplicate-input error.
+
 ### GUI14: Recover from input and storage errors
 
 1. Enter a command with extra spaces or tabs and verify it is accepted.
