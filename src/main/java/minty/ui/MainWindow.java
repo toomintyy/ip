@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import minty.Minty;
 
 /**
@@ -40,6 +41,10 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     public void initialize() {
+        for (String weight : new String[] {"Regular", "Bold", "ExtraBold"}) {
+            String resource = "/fonts/Nunito-" + weight + ".ttf";
+            Font.loadFont(getClass().getResource(resource).toExternalForm(), 15);
+        }
         dialogContainer.heightProperty().addListener(observable -> scrollPane.setVvalue(1.0));
     }
 

@@ -119,6 +119,25 @@ Messages have comfortable padding and line spacing; task numbers are followed
 by a space. The input and button fit without overlapping the conversation.
 Both submission methods clear the field, and goodbye disables both controls.
 
+### GUI10: Bundled Nunito typography
+
+1. Start Minty without installing Nunito as a system font.
+2. Inspect the header, subtitle, messages, input, and Send button.
+3. Add a long task and list tasks at the minimum window width.
+
+Expected: Nunito is used throughout: ExtraBold 23px for the title, Regular
+15px for messages, Regular 14px for input, Bold 14px for Send, and Regular
+12px for the subtitle. Text wraps without clipping and the input hint fits.
+
+### GUI11: Message dividers
+
+1. Send `list`, add a task, and send `list` again.
+2. Inspect both user and Minty messages at the minimum window width.
+
+Expected: A thin muted-green horizontal divider appears below each message,
+inset from the window edges, with space between the line and the bubble or
+avatar. Lines span the conversation width regardless of bubble length.
+
 ## TC1: Add, mark, and list all task types
 
 Aim: Verify that todos, deadlines, and events are created with the correct details, retain their types when marked, and appear correctly in the task list.
