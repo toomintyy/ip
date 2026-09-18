@@ -32,6 +32,11 @@ public abstract class AddCommand extends Command {
     @Override
     public final void execute(TaskList tasks, Ui ui, Storage storage) throws MintyException {
         Task task = createTask(fullCommand);
+        for (Task existing : tasks) {
+            if (existing.hasSameDetails(task)) {
+                throw new MintyException("That task is already on your list! Use list to find it.");
+            }
+        }
         tasks.add(task);
         saveTasks(tasks, ui, storage);
         ui.showTask("Fresh task coming right up! I've added:", task);

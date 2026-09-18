@@ -24,6 +24,8 @@ import minty.ui.Ui;
  * Runs Minty, a simple command-line chatbot.
  */
 public class Minty {
+    private String startupError = "";
+
     private final Ui ui;
     private final Storage storage;
     private final TaskList tasks;
@@ -179,11 +181,22 @@ public class Minty {
     private TaskList loadTasks() {
         try {
             return new TaskList(storage.loadTasks());
-        } catch (IOException | MintyException exception) {
-            ui.showError("I've hit a snag loading your saved tasks. Starting with an empty list for"
-                    + " this session. Details: " + exception.getMessage());
+        } catch (IOException | MintyException | SecurityException exception) {
+            startupError = "I've hit a snag loading your saved tasks. Starting with an empty list for"
+                    + " this session. Details: " + exception.getMessage()
+                    + " Saving is paused to protect your data. Repair or move the data file, then restart Minty.";
+            ui.showError(startupError);
             return new TaskList();
         }
+    }
+
+    /**
+     * Returns a startup failure for the GUI, where console warnings are not visible.
+     *
+     * @return loading warning, or an empty string when loading succeeded.
+     */
+    public String getStartupError() {
+        return startupError;
     }
 
     /**

@@ -58,6 +58,10 @@ public class MainWindow extends AnchorPane {
         dialogContainer.getChildren().add(DialogBox.getMintyDialog(
                 "Heyyy! I'm Minty, your fresh little task buddy!\nLet's get things moving. What's"
                         + " on your list today?", mintyImage));
+        if (!minty.getStartupError().isEmpty()) {
+            dialogContainer.getChildren().add(DialogBox.getMintyDialog(
+                    minty.getStartupError(), curiousImage, Minty.ResponseType.ERROR));
+        }
         userInput.requestFocus();
         String reminders = minty.getStartupReminders();
         if (!reminders.isEmpty()) {
@@ -82,7 +86,7 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getMintyDialog(response.text(), getExpressionImage(response.expression()), response.type()));
         userInput.clear();
 
-        if (input.equals("bye")) {
+        if (response.expression() == Minty.Expression.WAVING) {
             userInput.setDisable(true);
             sendButton.setDisable(true);
         }

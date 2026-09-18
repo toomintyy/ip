@@ -3,6 +3,8 @@ package minty.command;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import minty.exception.MintyException;
 import minty.task.Deadline;
@@ -38,6 +40,14 @@ public final class Parser {
      * @return executable command.
      */
     public static Command parse(String fullCommand, Clock clock) {
+        if (fullCommand != null && fullCommand.codePoints().anyMatch(character ->
+                Character.isISOControl(character) && character != '\t')) {
+            return new UnknownCommand("One command at a time! Remove line breaks or control characters and try again.");
+        }
+        fullCommand = normalizeCommand(fullCommand);
+        if (fullCommand.isEmpty()) {
+            return new UnknownCommand("What shall we do? Try list or todo read a book.");
+        }
         CommandType commandType = parseCommandType(fullCommand);
         switch (commandType) {
             case BYE:
@@ -76,7 +86,7 @@ public final class Parser {
      * @return recognized command type, or {@link CommandType#UNKNOWN}.
      */
     public static CommandType parseCommandType(String command) {
-        return CommandType.from(command);
+        return CommandType.from(normalizeCommand(command));
     }
 
     /**
@@ -136,7 +146,7 @@ public final class Parser {
      */
     public static Deadline parseDeadline(String command) throws MintyException {
         String details = getCommandArguments(command, CommandType.DEADLINE);
-        int bySeparator = details.indexOf("/by");
+        int bySeparator = findParameter(details, "/by");
         if (bySeparator < 0) {
             throw new MintyException("Let's give that deadline a date! Try deadline submit report /by 2026-09-18.");
         }
@@ -164,8 +174,8 @@ public final class Parser {
      */
     public static Event parseEvent(String command) throws MintyException {
         String details = getCommandArguments(command, CommandType.EVENT);
-        int fromSeparator = details.indexOf("/from");
-        int toSeparator = details.indexOf("/to");
+        int fromSeparator = findParameter(details, "/from");
+        int toSeparator = findParameter(details, "/to");
 
         if (toSeparator >= 0 && (fromSeparator < 0 || toSeparator < fromSeparator)) {
             throw new MintyException("Start first, finish second! Put /from before /to.");
@@ -238,7 +248,37 @@ public final class Parser {
      * @return trimmed command arguments, or an empty string if none were supplied.
      */
     private static String getCommandArguments(String command, CommandType commandType) {
-        return command.substring(commandType.getCommandWord().length()).trim();
+        return normalizeCommand(command).substring(commandType.getCommandWord().length()).trim();
+    }
+
+    /**
+     * Accepts accidental whitespace around and within a single-line command.
+     *
+     * @param command user input, possibly null or blank.
+     * @return command with whitespace runs replaced by one space.
+     */
+    private static String normalizeCommand(String command) {
+        return command == null ? "" : command.replaceAll("(?U)\\s+", " ").strip();
+    }
+
+    /**
+     * Finds a standalone date parameter and rejects accidental repetitions.
+     *
+     * @param details task description and parameters.
+     * @param parameter expected date marker.
+     * @return marker offset, or -1 if absent.
+     * @throws MintyException if the marker occurs more than once.
+     */
+    private static int findParameter(String details, String parameter) throws MintyException {
+        Matcher matcher = Pattern.compile("(?<!\\S)" + Pattern.quote(parameter) + "(?!\\S)").matcher(details);
+        if (!matcher.find()) {
+            return -1;
+        }
+        int position = matcher.start();
+        if (matcher.find()) {
+            throw new MintyException("Whoops! Use " + parameter + " only once.");
+        }
+        return position;
     }
 
     /**
@@ -251,6 +291,9 @@ public final class Parser {
      */
     private static LocalDate parseDate(String dateText, String dateName) throws MintyException {
         try {
+            if (!dateText.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
+                throw new DateTimeParseException("Expected yyyy-MM-dd", dateText, 0);
+            }
             return LocalDate.parse(dateText);
         } catch (DateTimeParseException exception) {
             throw new MintyException("That " + dateName + " date doesn't look right!"

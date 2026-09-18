@@ -9,6 +9,24 @@ import minty.ui.Ui;
  * Represents input that does not match any command Minty understands.
  */
 public class UnknownCommand extends Command {
+    private final String message;
+
+    /**
+     * Creates the standard unrecognized-command response.
+     */
+    public UnknownCommand() {
+        this("Whoops! I don't recognize that command. Try list to see your"
+                + " tasks or todo read a book to add one.");
+    }
+
+    /**
+     * Creates an actionable response for input that cannot be executed.
+     *
+     * @param message explanation and recovery hint.
+     */
+    public UnknownCommand(String message) {
+        this.message = message;
+    }
 
     /**
      * Reports that the input cannot be understood.
@@ -20,7 +38,6 @@ public class UnknownCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws MintyException {
-        throw new MintyException("Whoops! I don't recognize that command. Try list to see your"
-                + " tasks or todo read a book to add one.");
+        throw new MintyException(message);
     }
 }

@@ -1,8 +1,10 @@
 package minty.storage;
 
 import java.io.IOException;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class Storage {
     private static final String COMPLETE_STATUS = "1";
 
     private final Path filePath;
+    private boolean isSaveBlocked;
 
     /**
      * Creates storage that reads from and writes to the specified file.
@@ -55,18 +58,43 @@ public class Storage {
      * @throws MintyException if the save file contains invalid task data.
      */
     public ArrayList<Task> loadTasks() throws IOException, MintyException {
+        try {
+            return readTasks();
+        } catch (IOException | MintyException | SecurityException exception) {
+            isSaveBlocked = true;
+            throw exception;
+        }
+    }
+
+    /**
+     * Reads validated task data without treating inaccessible files as missing.
+     *
+     * @return tasks from the file, or an empty list on first use.
+     * @throws IOException if the file cannot be read.
+     * @throws MintyException if saved data is malformed.
+     */
+    private ArrayList<Task> readTasks() throws IOException, MintyException {
         ArrayList<Task> tasks = new ArrayList<>();
-        if (!Files.exists(filePath)) {
+        if (Files.notExists(filePath) && !Files.isSymbolicLink(filePath)) {
             return tasks;
         }
 
+        if (!Files.isRegularFile(filePath)) {
+            throw new IOException("The data path is not a readable regular file: " + filePath);
+        }
         int lineNumber = 0;
         for (String taskData : Files.readAllLines(filePath)) {
             lineNumber++;
             if (taskData.isBlank()) {
                 continue;
             }
-            tasks.add(parseTask(taskData, lineNumber));
+            Task task = parseTask(taskData, lineNumber);
+            for (Task existing : tasks) {
+                if (existing.hasSameDetails(task)) {
+                    throw invalidLine(lineNumber, "duplicate task details");
+                }
+            }
+            tasks.add(task);
         }
         return tasks;
     }
@@ -78,7 +106,17 @@ public class Storage {
      * @throws IOException if the data directory or file cannot be written.
      */
     public void saveTasks(Iterable<Task> tasks) throws IOException {
-        Path parentDirectory = filePath.getParent();
+        if (isSaveBlocked) {
+            throw new IOException("Saving is paused to protect unreadable data. "
+                    + "Repair or move the data file, then restart Minty.");
+        }
+        if (Files.isSymbolicLink(filePath)) {
+            throw new IOException("The data file is a symbolic link. Use a regular file instead.");
+        }
+        if (Files.exists(filePath) && (!Files.isRegularFile(filePath) || !Files.isWritable(filePath))) {
+            throw new IOException("The data path must be a writable regular file: " + filePath);
+        }
+        Path parentDirectory = filePath.toAbsolutePath().getParent();
         if (parentDirectory != null) {
             Files.createDirectories(parentDirectory);
         }
@@ -87,7 +125,19 @@ public class Storage {
         for (Task task : tasks) {
             taskData.add(task.toDataString());
         }
-        Files.write(filePath, taskData);
+        // Write completely before replacing the old file, preserving it if writing fails.
+        Path temporaryFile = Files.createTempFile(parentDirectory, "minty-", ".tmp");
+        try {
+            Files.write(temporaryFile, taskData);
+            try {
+                Files.move(temporaryFile, filePath, StandardCopyOption.ATOMIC_MOVE,
+                        StandardCopyOption.REPLACE_EXISTING);
+            } catch (AtomicMoveNotSupportedException exception) {
+                Files.move(temporaryFile, filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } finally {
+            Files.deleteIfExists(temporaryFile);
+        }
     }
 
     /**

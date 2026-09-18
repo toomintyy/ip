@@ -29,6 +29,59 @@ public class MintyTest {
     private Path temporaryDirectory;
 
     @Test
+    public void getChatResponse_whitespaceAndInvalidInput_recoversWithoutAddingBadTasks() {
+        Minty minty = new Minty(temporaryDirectory.resolve("tasks.txt"));
+        assertEquals(Minty.ResponseType.SUCCESS, minty.getChatResponse("  todo\t read   book  ").type());
+        assertTrue(minty.getResponse(" list  ").contains("1. [T][ ] read book"));
+        for (String input : new String[] {null, "  ", "todo bad\nlist", "todo bad\u0000task",
+            "deadline work /by 2026-09-20 /by 2026-09-21", "mark 1 2"}) {
+            assertEquals(Minty.ResponseType.ERROR, minty.getChatResponse(input).type());
+        }
+        assertEquals(Minty.ResponseType.SUCCESS, minty.getChatResponse("mark\t1").type());
+        assertTrue(minty.getResponse("list").contains("1. [T][X] read book"));
+        assertEquals(Minty.Expression.WAVING, minty.getChatResponse("  bye  ").expression());
+    }
+
+    @Test
+    public void getChatResponse_duplicateDetails_rejectsEvenWhenCompletedButAllowsDifferentDates() {
+        Minty minty = new Minty(temporaryDirectory.resolve("tasks.txt"));
+        minty.getResponse("todo read book");
+        minty.getResponse("mark 1");
+        assertEquals(Minty.ResponseType.ERROR, minty.getChatResponse("todo read   book").type());
+        assertEquals(Minty.ResponseType.SUCCESS,
+                minty.getChatResponse("deadline read book /by 2026-09-20").type());
+        assertEquals(Minty.ResponseType.ERROR,
+                minty.getChatResponse("deadline read book /by 2026-09-20").type());
+        assertEquals(Minty.ResponseType.SUCCESS,
+                minty.getChatResponse("deadline read book /by 2026-09-21").type());
+    }
+
+    @Test
+    public void getChatResponse_corruptStartupFile_preservesOriginalAndReportsGuiWarning() throws IOException {
+        Path file = temporaryDirectory.resolve("tasks.txt");
+        String original = "T | 0 | valid\ninvalid data";
+        Files.writeString(file, original);
+        Minty minty = new Minty(file);
+
+        assertTrue(minty.getStartupError().contains("Saving is paused"));
+        Minty.ChatResponse response = minty.getChatResponse("todo session task");
+        assertEquals(Minty.ResponseType.ERROR, response.type());
+        assertTrue(response.text().contains("Repair or move the data file"));
+        assertTrue(minty.getResponse("list").contains("session task"));
+        assertEquals(original, Files.readString(file));
+    }
+
+    @Test
+    public void getChatResponse_parentIsFile_reportsFailureAndKeepsSessionUsable() throws IOException {
+        Path parent = temporaryDirectory.resolve("not-a-directory");
+        Files.writeString(parent, "preserve me");
+        Minty minty = new Minty(parent.resolve("tasks.txt"));
+        assertEquals(Minty.ResponseType.ERROR, minty.getChatResponse("todo read book").type());
+        assertTrue(minty.getResponse("list").contains("read book"));
+        assertEquals("preserve me", Files.readString(parent));
+    }
+
+    @Test
     public void getChatResponse_responseTypes_reflectOutcomesWithoutMatchingTaskText() {
         Minty minty = new Minty(temporaryDirectory.resolve("tasks.txt"));
         assertEquals(Minty.ResponseType.SUCCESS,

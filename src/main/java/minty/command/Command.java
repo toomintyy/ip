@@ -41,7 +41,7 @@ public abstract class Command {
     protected void saveTasks(TaskList tasks, Ui ui, Storage storage) {
         try {
             storage.saveTasks(tasks);
-        } catch (IOException exception) {
+        } catch (IOException | SecurityException exception) {
             ui.showError("I've hit a snag saving your tasks. Your changes are in this session, but"
                     + " couldn't be saved to the file. Details: " + exception.getMessage());
         }

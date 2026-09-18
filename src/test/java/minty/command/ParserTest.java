@@ -19,6 +19,32 @@ import minty.task.Todo;
 public class ParserTest {
 
     @Test
+    public void parseDeadline_repeatedOrPartialParameter_rejectsMalformedInput() {
+        MintyException repeated = assertThrows(MintyException.class, () ->
+                Parser.parseDeadline("deadline work /by 2026-09-20 /by 2026-09-21"));
+        assertEquals("Whoops! Use /by only once.", repeated.getMessage());
+        assertThrows(MintyException.class, () -> Parser.parseDeadline("deadline work /by2026-09-20"));
+        assertThrows(MintyException.class, () -> Parser.parseDeadline("deadline work /bypass 2026-09-20"));
+    }
+
+    @Test
+    public void parseEvent_repeatedParameters_rejectsBothMarkers() {
+        assertThrows(MintyException.class, () -> Parser.parseEvent(
+                "event work /from 2026-09-20 /from 2026-09-21 /to 2026-09-22"));
+        assertThrows(MintyException.class, () -> Parser.parseEvent(
+                "event work /from 2026-09-20 /to 2026-09-21 /to 2026-09-22"));
+    }
+
+    @Test
+    public void parseDeadline_invalidCalendarDates_rejectsAndAcceptsLeapDay() throws MintyException {
+        for (String date : new String[] {"2026-02-30", "2026-02-29", "2026-13-01", "+10000-01-01"}) {
+            assertThrows(MintyException.class, () -> Parser.parseDeadline("deadline work /by " + date));
+        }
+        assertEquals("D | 0 | work | 2028-02-29",
+                Parser.parseDeadline("deadline work /by 2028-02-29").toDataString());
+    }
+
+    @Test
     public void parseTaskIndex_validTaskNumber_returnsZeroBasedIndex()
             throws MintyException {
         int actualIndex =

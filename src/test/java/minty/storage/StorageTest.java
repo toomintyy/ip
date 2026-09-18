@@ -7,9 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -27,6 +29,87 @@ public class StorageTest {
 
     @TempDir
     private Path temporaryDirectory;
+
+    @Test
+    public void saveTasks_readOnlyFile_reportsErrorAndPreservesData() throws IOException {
+        Path file = temporaryDirectory.resolve("tasks.txt");
+        Files.writeString(file, "T | 0 | keep");
+        org.junit.jupiter.api.Assumptions.assumeTrue(
+                Files.getFileStore(file).supportsFileAttributeView("posix"));
+        Set<PosixFilePermission> originalPermissions = Files.getPosixFilePermissions(file);
+        try {
+            Files.setPosixFilePermissions(file, Set.of(PosixFilePermission.OWNER_READ));
+            org.junit.jupiter.api.Assumptions.assumeFalse(Files.isWritable(file));
+            assertThrows(IOException.class, () -> new Storage(file).saveTasks(List.of(new Todo("new"))));
+            assertEquals("T | 0 | keep", Files.readString(file));
+        } finally {
+            Files.setPosixFilePermissions(file, originalPermissions);
+        }
+    }
+
+    @Test
+    public void loadTasks_permissionDenied_blocksSaving() throws IOException {
+        Path file = temporaryDirectory.resolve("tasks.txt");
+        Files.writeString(file, "T | 0 | keep");
+        org.junit.jupiter.api.Assumptions.assumeTrue(
+                Files.getFileStore(file).supportsFileAttributeView("posix"));
+        Set<PosixFilePermission> originalPermissions = Files.getPosixFilePermissions(file);
+        Storage storage = new Storage(file);
+        try {
+            Files.setPosixFilePermissions(file, Set.of());
+            org.junit.jupiter.api.Assumptions.assumeFalse(Files.isReadable(file));
+            assertThrows(IOException.class, storage::loadTasks);
+        } finally {
+            Files.setPosixFilePermissions(file, originalPermissions);
+        }
+        assertThrows(IOException.class, () -> storage.saveTasks(List.of(new Todo("new"))));
+        assertEquals("T | 0 | keep", Files.readString(file));
+    }
+
+    @Test
+    public void loadTasks_badData_blocksLaterWritesAndPreservesOriginal() throws IOException {
+        for (String original : new String[] {"bad data", "T | 0 | same\nT | 1 | same"}) {
+            Path file = temporaryDirectory.resolve("tasks.txt");
+            Files.writeString(file, original);
+            Storage storage = new Storage(file);
+            assertThrows(MintyException.class, storage::loadTasks);
+            assertThrows(IOException.class, () -> storage.saveTasks(List.of(new Todo("new"))));
+            assertEquals(original, Files.readString(file));
+        }
+    }
+
+    @Test
+    public void saveTasks_replacesExistingFileAndCleansTemporaryFile() throws IOException, MintyException {
+        Path file = temporaryDirectory.resolve("tasks.txt");
+        Storage storage = new Storage(file);
+        storage.saveTasks(List.of(new Todo("first")));
+        storage.saveTasks(List.of(new Todo("second")));
+        assertEquals("T | 0 | second", storage.loadTasks().getFirst().toDataString());
+        try (var files = Files.list(temporaryDirectory)) {
+            assertEquals(List.of(file), files.toList());
+        }
+    }
+
+    @Test
+    public void loadTasks_invalidUtf8_blocksSaving() throws IOException {
+        Path file = temporaryDirectory.resolve("tasks.txt");
+        byte[] bytes = {(byte) 0xc3, (byte) 0x28};
+        Files.write(file, bytes);
+        Storage storage = new Storage(file);
+        assertThrows(IOException.class, storage::loadTasks);
+        assertThrows(IOException.class, () -> storage.saveTasks(List.of(new Todo("new"))));
+        assertEquals(2, Files.size(file));
+    }
+
+    @Test
+    public void saveTasks_directoryTarget_preservesContents() throws IOException {
+        Path file = temporaryDirectory.resolve("tasks.txt");
+        Files.createDirectory(file);
+        Path child = file.resolve("keep.txt");
+        Files.writeString(child, "keep");
+        assertThrows(IOException.class, () -> new Storage(file).saveTasks(List.of(new Todo("new"))));
+        assertEquals("keep", Files.readString(child));
+    }
 
     @Test
     public void loadTasks_missingFile_returnsEmptyList() throws IOException, MintyException {

@@ -160,6 +160,17 @@ fading smoothly to richer foliage at both edges. The wash stays fixed behind
 the scrolling messages and adapts to the viewport width. Avatars, bubbles,
 header, input controls, and text retain their normal colors and opacity.
 
+### GUI14: Recover from input and storage errors
+
+1. Enter a command with extra spaces or tabs and verify it is accepted.
+2. Add the same task twice and repeat /by in a deadline command.
+3. With an isolated malformed data file, restart the GUI and add a task.
+
+Expected: Input errors use red bubbles and explain recovery. A startup warning
+appears in a red bubble when loading fails. New tasks stay in the session, but
+saving is blocked so the original malformed file is preserved. Repair or move
+the file and restart to resume saving. Missing files start an empty list normally.
+
 ## TC1: Add, mark, and list all task types
 
 Aim: Verify that todos, deadlines, and events are created with the correct details, retain their types when marked, and appear correctly in the task list.
@@ -789,7 +800,7 @@ bye
 ### Expected output
 
 ```text
-  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: status must be 0 or 1.
+  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: status must be 0 or 1. Saving is paused to protect your data. Repair or move the data file, then restart Minty.
 ____________________________________________________________
 ███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
 ████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
@@ -818,7 +829,7 @@ bye
 ### Expected output
 
 ```text
-  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: unknown task type 'N'.
+  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: unknown task type 'N'. Saving is paused to protect your data. Repair or move the data file, then restart Minty.
 ____________________________________________________________
 ███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
 ████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
@@ -847,7 +858,7 @@ bye
 ### Expected output
 
 ```text
-  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: expected 4 fields but found 3.
+  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: expected 4 fields but found 3. Saving is paused to protect your data. Repair or move the data file, then restart Minty.
 ____________________________________________________________
 ███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
 ████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
@@ -876,7 +887,7 @@ bye
 ### Expected output
 
 ```text
-  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: task details cannot be empty.
+  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: task details cannot be empty. Saving is paused to protect your data. Repair or move the data file, then restart Minty.
 ____________________________________________________________
 ███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
 ████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
@@ -905,7 +916,7 @@ bye
 ### Expected output
 
 ```text
-  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: unfinished escape character.
+  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: unfinished escape character. Saving is paused to protect your data. Repair or move the data file, then restart Minty.
 ____________________________________________________________
 ███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
 ████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
@@ -934,7 +945,7 @@ bye
 ### Expected output
 
 ```text
-  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: unsupported escape sequence '\q'.
+  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: unsupported escape sequence '\q'. Saving is paused to protect your data. Repair or move the data file, then restart Minty.
 ____________________________________________________________
 ███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
 ████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
@@ -1022,7 +1033,7 @@ bye
 ### Expected output
 
 ```text
-  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: date must use yyyy-MM-dd.
+  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: date must use yyyy-MM-dd. Saving is paused to protect your data. Repair or move the data file, then restart Minty.
 ____________________________________________________________
 ███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
 ████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
@@ -1051,7 +1062,7 @@ bye
 ### Expected output
 
 ```text
-  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: event end date is before its start date.
+  I've hit a snag loading your saved tasks. Starting with an empty list for this session. Details: I couldn't read the saved task on line 1: event end date is before its start date. Saving is paused to protect your data. Repair or move the data file, then restart Minty.
 ____________________________________________________________
 ███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
 ████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
@@ -1239,6 +1250,152 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
   Whoops! I don't recognize that command. Try list to see your tasks or todo read a book to add one.
+____________________________________________________________
+____________________________________________________________
+  Stay fresh! Catch you next time!
+____________________________________________________________
+```
+
+## TC24: Normalize whitespace and reject duplicates
+
+Aim: Verify leading/trailing spaces and tabs are accepted, duplicate details do not create tasks, and the session recovers.
+
+### Input
+
+```text
+  todo	read   book  
+ todo read book 
+ mark	1 
+todo read book
+ list 
+ bye 
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Minty, your fresh little task buddy!
+  Let's get things moving. What's on your list today?
+____________________________________________________________
+____________________________________________________________
+  Fresh task coming right up! I've added:
+    [T][ ] read book
+  Your list now has 1 task.
+____________________________________________________________
+____________________________________________________________
+  That task is already on your list! Use list to find it.
+____________________________________________________________
+____________________________________________________________
+  Woohoo! Marked as done:
+    [T][X] read book
+____________________________________________________________
+____________________________________________________________
+  That task is already on your list! Use list to find it.
+____________________________________________________________
+____________________________________________________________
+  Let's check your lineup! Here are your tasks:
+  1. [T][X] read book
+____________________________________________________________
+____________________________________________________________
+  Stay fresh! Catch you next time!
+____________________________________________________________
+```
+
+## TC25: Reject repeated parameters and recover
+
+Aim: Verify repeated date markers and invalid dates are rejected while a same-day event remains valid.
+
+### Input
+
+```text
+deadline work /by 2019-01-01 /by 2019-01-02
+event work /from 2019-01-01 /from 2019-01-02 /to 2019-01-03
+event work /from 2019-01-01 /to 2019-01-02 /to 2019-01-03
+deadline work /by 2019-02-30
+event day trip /from 2019-01-01 /to 2019-01-01
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Minty, your fresh little task buddy!
+  Let's get things moving. What's on your list today?
+____________________________________________________________
+____________________________________________________________
+  Whoops! Use /by only once.
+____________________________________________________________
+____________________________________________________________
+  Whoops! Use /from only once.
+____________________________________________________________
+____________________________________________________________
+  Whoops! Use /to only once.
+____________________________________________________________
+____________________________________________________________
+  That deadline date doesn't look right! Use a valid date in yyyy-MM-dd format, like 2026-09-18.
+____________________________________________________________
+____________________________________________________________
+  Fresh task coming right up! I've added:
+    [E][ ] day trip (from: Jan 01 2019 to: Jan 01 2019)
+  Your list now has 1 task.
+____________________________________________________________
+____________________________________________________________
+  Stay fresh! Catch you next time!
+____________________________________________________________
+```
+
+## TC26: Reject blank input and malformed markers
+
+Aim: Verify blank input, missing spaces around date markers, and multiple task numbers produce errors without stopping later commands.
+
+### Input
+
+```text
+
+deadline work /by2019-01-01
+mark 1 2
+list
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+███╗   ███╗██╗███╗   ██╗████████╗██╗   ██╗
+████╗ ████║██║████╗  ██║╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║██╔██╗ ██║   ██║    ╚████╔╝
+██║╚██╔╝██║██║██║╚██╗██║   ██║     ╚██╔╝
+██║ ╚═╝ ██║██║██║ ╚████║   ██║      ██║
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝
+  Heyyy! I'm Minty, your fresh little task buddy!
+  Let's get things moving. What's on your list today?
+____________________________________________________________
+____________________________________________________________
+  What shall we do? Try list or todo read a book.
+____________________________________________________________
+____________________________________________________________
+  Let's give that deadline a date! Try deadline submit report /by 2026-09-18.
+____________________________________________________________
+____________________________________________________________
+  Whoops! Use a whole number for the task, like mark 1.
+____________________________________________________________
+____________________________________________________________
+  A fresh start! Your list is empty. Try todo read a book to get going.
 ____________________________________________________________
 ____________________________________________________________
   Stay fresh! Catch you next time!

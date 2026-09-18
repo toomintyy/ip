@@ -88,6 +88,18 @@ public class Task {
     }
 
     /**
+     * Compares task type, description, and dates without considering completion.
+     *
+     * @param other task to compare.
+     * @return whether both tasks describe the same work.
+     */
+    public boolean hasSameDetails(Task other) {
+        String details = toDataString().replaceFirst(" \\| [01] \\| ", " | ");
+        String otherDetails = other.toDataString().replaceFirst(" \\| [01] \\| ", " | ");
+        return details.equals(otherDetails);
+    }
+
+    /**
      * Escapes characters that have special meaning in the save-file format.
      *
      * @param value task field to escape.
