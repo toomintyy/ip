@@ -73,7 +73,9 @@ Expected: Minty says "Let's give that task a name! Try todo read a book.", and t
 1. Enter `bye` in the command field.
 2. Press Enter.
 
-Expected: Minty shows its goodbye message and disables the command field and Send button.
+Expected: Minty's window closes and the application process exits normally.
+Repeat after restarting, submitting `  bye  ` with Send instead of Enter; the app also closes.
+Before exiting, submit `bye now` and then `list`: the invalid command must leave the window usable.
 
 ### GUI5: Display themed images
 
@@ -98,12 +100,12 @@ and input remain separate from the conversation at every supported size.
 ### GUI8: Expressive mascot avatars
 
 1. Add `todo read book`, then enter `mark 1`.
-2. Enter `mark 99`, then `list`, then `bye`.
+2. Enter `mark 99`, then `list`.
 3. Inspect the avatars alongside each response.
 
 Expected: The add and list responses use the original mascot. Successful marking
 uses the celebrating mascot. The invalid task number uses the curious mascot.
-Goodbye uses the waving mascot and disables input. Earlier bubbles keep their
+Earlier bubbles keep their
 original expressions. All avatars have transparent backgrounds and fit the
 existing avatar space; the identity bar keeps the original mascot.
 
@@ -117,7 +119,7 @@ Expected: The hint reads "What’s next? Try todo read a book". Focus has a
 clear green outline; Send has hover, pressed, and keyboard-focus feedback.
 Messages have comfortable padding and line spacing; task numbers are followed
 by a space. The input and button fit without overlapping the conversation.
-Both submission methods clear the field, and goodbye disables both controls.
+Both submission methods clear the field, and goodbye closes the application.
 
 ### GUI10: Bundled Nunito typography
 
